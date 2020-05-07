@@ -34,6 +34,7 @@ PATH
 
 GEM
   remote: https://rubygems.org/
+  remote: https://packagecloud.io/cinc-project/stable/
   specs:
     activesupport (7.1.5.2)
       base64
