@@ -15,7 +15,7 @@ EOF
 
   env_helper = "veil-env-helper --use-file -f /etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/private-#{ChefUtils::Dist::Infra::SHORT}-secrets.json -s chef-server.webui_key -s oc_id.sql_password -s oc_id.secret_key_base"
   cmd = Mixlib::ShellOut.new("#{env_helper} -- bin/rails runner -e production '#{rails_script}'",
-                          cwd: "/opt/opscode/embedded/service/oc_id")
+                          cwd: "/opt/cinc-project/embedded/service/oc_id")
   cmd.run_command
   json = cmd.stdout.lines.last.chomp
   if json == "null"

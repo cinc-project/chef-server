@@ -12,6 +12,39 @@ gem "rest-client", git: "https://github.com/chef/rest-client.git", branch: "jfm/
 # PR #352 merged to main but not released yet - use main branch
 gem 'chef-zero', git: "https://github.com/chef/chef-zero.git", branch: "main"
 
+# Version lock these to match Gemfile.lock when doing a stable release
+if ENV['CHANNEL'] =~ /stable|unstable|current/
+  gem 'aws-partitions', '= 1.571.0'
+  gem 'aws-sdk-core', '= 3.130.0'
+  gem 'aws-sdk-kms', '= 1.55.0'
+  gem 'aws-sdk-s3', '= 1.113.0'
+  gem 'aws-sdk-secretsmanager', '= 1.59.0'
+  gem 'aws-sigv4', '= 1.4.0'
+  gem 'chef-vault', '= 4.1.5'
+  gem 'corefoundation', '= 0.3.13'
+  gem 'faraday-net_http', '= 1.0.1'
+  gem 'faraday_middleware', '= 1.2.0'
+  gem 'ffi-libarchive', '= 1.1.3'
+  gem 'gyoku', '= 1.3.1'
+  gem 'inspec-core', "= 4.56.19", source: "https://rubygems.cinc.sh"
+  gem 'json', '= 2.6.1'
+  gem 'multipart-post', '= 2.1.1'
+  gem 'ohai', '= 17.9.0'
+  gem 'parallel', '= 1.22.1'
+  gem 'plist', '= 3.6.0'
+  gem 'rack', '= 2.2.6.3'
+  gem 'rspec-its', '= 1.3.0'
+  gem 'semverse', '= 3.0.0'
+  gem 'thor', '= 1.2.1'
+  gem 'train-core', '= 3.8.9'
+  gem 'train-winrm', '= 0.2.13'
+  gem 'tty-screen', '= 0.8.1'
+  gem 'unicode-display_width', '= 2.1.0'
+  gem 'vault', '= 0.16.0'
+  gem 'webrick', '= 1.7.0'
+  gem 'wmi-lite', '= 1.0.5'
+end
+
 # If you want to load debugging tools into the bundle exec sandbox,
 # # add these additional dependencies into Gemfile.local
 eval(File.read(__FILE__ + ".local"), binding) if File.exist?(__FILE__ + ".local")
