@@ -10,10 +10,22 @@ gem 'rake'
 # We require chef internally to get the version in
 # lib/pedant/request.rb. It's really strange code and it should be
 # revisited.
-gem 'chef', "17.10.0"
+gem 'chef', "17.10.0",
+    source: "https://packagecloud.io/cinc-project/stable"
 
 # For "rake chef_zero_spec"
 #gem 'chef-zero', github: 'chef/chef-zero'
+
+# Version lock these to match Gemfile.lock when doing a stable release
+if ENV['CHANNEL'] == 'stable' || ENV['CHANNEL'] == 'unstable'
+  gem 'aws-partitions', '= 1.556.0'
+  gem 'aws-sdk-core', '= 3.126.2'
+  gem 'aws-sdk-kms', '= 1.54.0'
+  gem 'aws-sdk-s3', '= 1.112.0'
+  gem 'aws-sdk-secretsmanager', '= 1.57.0'
+  gem 'corefoundation', '= 0.3.13'
+  gem 'train-winrm', '= 0.2.12'
+end
 
 # If you want to load debugging tools into the bundle exec sandbox,
 # # add these additional dependencies into Gemfile.local
