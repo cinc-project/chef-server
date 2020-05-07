@@ -23,6 +23,7 @@ PATH
 
 GEM
   remote: https://rubygems.org/
+  remote: https://packagecloud.io/cinc-project/stable/
   specs:
     addressable (2.8.1)
       public_suffix (>= 2.0.2, < 6.0)
