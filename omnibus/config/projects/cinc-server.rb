@@ -1,5 +1,6 @@
 #
 # Copyright 2012-2014 Chef Software, Inc.
+# Copyright 2020, Cinc Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,16 +15,16 @@
 # limitations under the License.
 #
 
-name "chef-server"
-maintainer "Chef Software, Inc. <maintainers@chef.io>"
-homepage   "https://www.chef.io"
-license "Chef EULA"
-license_file "CHEF-EULA.md"
+name "cinc-server"
+maintainer "Cinc Project <maintainers@cinc.sh>"
+homepage   "https://www.cinc.sh"
+license "Apache-2.0"
+license_file "../LICENSE"
 
-package_name    "chef-server-core"
+package_name    "cinc-server-core"
 replace         "private-chef"
 conflict        "private-chef"
-install_dir     "/opt/opscode"
+install_dir     "/opt/cinc-project"
 build_version   IO.read(File.expand_path("../../../../VERSION", __FILE__)).strip
 build_iteration 1
 
@@ -45,7 +46,7 @@ dependency "ruby-cleanup"
 dependency "cleanup"
 
 package :rpm do
-  signing_passphrase ENV['OMNIBUS_RPM_SIGNING_PASSPHRASE']
+  # signing_passphrase ENV['OMNIBUS_RPM_SIGNING_PASSPHRASE']
   compression_level 6
   compression_type :xz
 end
