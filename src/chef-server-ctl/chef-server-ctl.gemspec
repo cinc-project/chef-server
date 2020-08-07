@@ -45,10 +45,9 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "omnibus-ctl"
   spec.add_runtime_dependency "license-acceptance"
 
-
   spec.add_runtime_dependency "appbundler"
 
-  spec.add_runtime_dependency "cinc", "~> 15.12.22"
+  spec.add_runtime_dependency "chef", "~> 15.12.22"
 
   # tools we bundle in the chef-server install and include here so we can have a single Gemfile.lock
   # for the overall chef-server "app"
