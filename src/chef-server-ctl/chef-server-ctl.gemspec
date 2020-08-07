@@ -9,13 +9,13 @@ Gem::Specification.new do |spec|
   spec.version       = ChefServerCtl::VERSION
   spec.authors       = ["Mark Anderson"]
   spec.email         = ["mark@chef.io"]
-  spec.description   = %q{Commands to control Chef Server}
+  spec.description   = %q{Commands to control Cinc Server}
   spec.summary       = spec.description
   spec.licenses      = "Apache-2.0"
 
   spec.files         = %w{LICENSE README.md} + Dir.glob("{bin,doc,helpers,lib,plugins,spec}/**/*")
   spec.bindir        = "bin"
-  spec.executables   = "chef-server-ctl"
+  spec.executables   = "cinc-server-ctl"
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 

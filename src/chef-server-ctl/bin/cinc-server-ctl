@@ -246,7 +246,8 @@ EOM
 
       puts ::ChefServerCtl::Config::DOC_PATENT_MSG
 
-      LicenseAcceptance::Acceptor.check_and_persist!("infra-server", ChefServerCtl::VERSION.to_s)
+      # No license needed for Cinc Server
+      # LicenseAcceptance::Acceptor.check_and_persist!("infra-server", ChefServerCtl::VERSION.to_s)
 
       ENV["CHEF_LICENSE"]="accept-no-persist"
 

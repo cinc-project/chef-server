@@ -1,0 +1,85 @@
+#!/bin/bash
+#
+# Perform necessary chef-server setup steps after package is installed.
+#
+
+PROGNAME=$(basename $0)
+
+function error_exit
+{
+	echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
+	exit 1
+}
+
+ln -sf /opt/cinc-project/bin/private-cinc-ctl /usr/bin || error_exit "Cannot link private-cinc-ctl in /usr/bin"
+ln -sf /opt/cinc-project/bin/cinc-server-ctl /usr/bin || error_exit "Cannot link cinc-server-ctl in /usr/bin"
+
+if [ -L /var/opt/opscode/plugins/chef-ha-drbd.rb ]; then
+  rm -f /var/opt/opscode/plugins/chef-ha-drbd.rb
+fi
+
+
+
+# TODO: Kill this; it is needed only during development of the CINC Patching process
+if [ ! -x /opt/opscode ]; then
+  ln -s /opt/cinc-project /opt/opscode
+fi
+
+wrapper_links="chef-server-ctl chef-client"
+link_target="cinc-wrapper"
+for link in $wrapper_links; do
+  if [ ! -e $PREFIX/bin/$link ]; then
+    echo "Symlinking $link command to cinc-wrapper for compatibility..."
+    ln -sf $INSTALLER_DIR/bin/$link_target $PREFIX/bin/$link || error_exit "Cannot link $link_target to $PREFIX/bin/$link"
+  fi
+done
+
+# TODO: jgitlin: this should be $PREFIX/bin but that breaks because somewhere /bin is hardcoded?
+echo "Symlinking cinc-wrapper (INSTALLER_DIR=$INSTALLER_DIR; PREFIX=$PREFIX)"
+echo "DEBUG env: `env`"
+ln -sf /opt/opscode/bin/cinc-wrapper /bin/cinc-wrapper || error_exit "Cannot link cinc-wrapper to /bin/cinc-wrapper"
+
+# TODO: Clean up these hacks when they are no longer needed
+# This is a temporary workaround until patches can be made to no longer call these:
+ln -s $INSTALLER_DIR/bin/$link_target /opt/opscode/embedded/bin/chef-client
+ln -s $INSTALLER_DIR/bin/$link_target /opt/opscode/bin/chef-solo
+ln -s $INSTALLER_DIR/bin/$link_target /opt/opscode/bin/chef-server-ctl
+ln -s $INSTALLER_DIR/bin/$link_target /opt/opscode/bin/private-chef-ctl
+
+mkdir -p /etc/cinc-project
+touch /etc/cinc-project/cinc-server.rb
+# chef-server.rb might contain secrets, restrict permissions of other.
+chmod o-rwx /etc/cinc-project/cinc-server.rb
+
+# Ensure all files/directories in $INSTALLER_DIR are owned by root. This
+# has been fixed on new installs but upgrades from old installs need to
+# be manually fixed.
+chown -Rh 0:0 /opt/cinc-project
+
+if [ -e /etc/cinc-project/cinc-server-running.json ]; then
+  echo -e "\033[1mYou have upgraded Cinc Server!\033[0m"
+  echo
+  echo "The next step in the upgrade process is to run:"
+  echo
+  echo -e "\033[1;31mcinc-server-ctl upgrade\033[0m"
+  echo
+  echo "After the upgrade command completes, your Cinc services will"
+  echo "remain in a down state. To bring them back up run:"
+  echo
+  echo -e "\033[1;31mcinc-server-ctl start\033[0m"
+  echo
+  echo "Then, to remove configuration files, logs, directories,"
+  echo "users, etc. that were used by internal services that"
+  echo "have been removed from this version of Chef Server,"
+  echo "please run:"
+  echo
+  echo -e "\033[1;31mcinc-server-ctl cleanup\033[0m"
+  echo
+  echo "(Add the '--no-op' option to see what would be removed by"
+  echo "this command)"
+  echo
+  echo "For detailed upgrade instructions please see:"
+  echo "https://docs.chef.io/upgrade_server.html"
+fi
+
+exit 0
