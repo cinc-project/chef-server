@@ -39,7 +39,7 @@ build do
 
   appbundle "chef-server-ctl", env: env
 
-  link "#{install_dir}/bin/cinc-server-ctl", "#{install_dir}/bin/private-chef-ctl"
+  link "#{install_dir}/bin/chef-server-ctl", "#{install_dir}/bin/private-chef-ctl"
 
   # These are necessary until we remove all hardcoded references to embedded/bin/*-ctl
   link "#{install_dir}/bin/cinc-server-ctl", "#{install_dir}/embedded/bin/chef-server-ctl"
