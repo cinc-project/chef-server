@@ -46,4 +46,14 @@ build do
   # These are necessary until we remove all hardcoded references to embedded/bin/*-ctl
   link "#{install_dir}/bin/cinc-server-ctl", "#{install_dir}/embedded/bin/chef-server-ctl"
   link "#{install_dir}/bin/cinc-server-ctl", "#{install_dir}/embedded/bin/private-chef-ctl"
+
+  # TODO: jgitlin hack to make `cinc-server-ctl reconfigure` work during CINC development
+  # TODO: None of this is at all acceptable, should be thought of as a list of replacements still do be fixed
+  `mkdir -p /opt/cinc-project/bin /opt/cinc-project/embedded/bin`
+  `ln -s /opt/cinc-project /opt/opscode`
+  `ln -s /opt/cinc-project/bin/chef-server-ctl /usr/bin/cinc-server-ctl`
+  `ln -s /opt/cinc-project/bin/chef-server-ctl /usr/bin/chef-server-ctl`
+  `ln -s /opt/cinc-project/embedded/bin/cinc-client /opt/opscode/embedded/bin/chef-client`
+  `ln -s /opt/cinc-project/bin/chef-server-ctl /opt/cinc-project/bin/cinc-server-ctl`
+  `ln -s /opt/cinc-project/bin/cinc-solo /opt/opscode/bin/chef-solo`
 end
