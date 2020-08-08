@@ -37,7 +37,7 @@ build do
   # Hack: install binaries in /tmp because we don't actually want them at all
   gem "install chef-server-ctl-*.gem --no-document --verbose --bindir=/tmp", env: env
 
-  appbundle "cinc-server-ctl", env: env
+  appbundle "chef-server-ctl", env: env
 
   link "#{install_dir}/bin/cinc-server-ctl", "#{install_dir}/bin/private-chef-ctl"
 
