@@ -46,4 +46,7 @@ build do
   # These are necessary until we remove all hardcoded references to embedded/bin/*-ctl
   link "#{install_dir}/bin/chef-server-ctl", "#{install_dir}/embedded/bin/chef-server-ctl"
   link "#{install_dir}/bin/chef-server-ctl", "#{install_dir}/embedded/bin/private-chef-ctl"
+ 
+  # TODO: fix this
+  `ln -s /opt/cinc-project /opt/opscode`
 end
