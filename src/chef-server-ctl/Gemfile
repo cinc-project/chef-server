@@ -6,3 +6,4 @@ gem "chef_backup"
 gem "omnibus-ctl", git: "https://github.com/tehlers320/omnibus-ctl.git"
 gem "veil", git: "https://github.com/chef/chef_secrets.git"
 gem "toml" # for habitat-land
+gem "chef", source: "https://packagecloud.io/cinc-project/server-dev"
