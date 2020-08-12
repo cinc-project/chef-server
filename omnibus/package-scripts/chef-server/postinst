@@ -11,41 +11,41 @@ function error_exit
 	exit 1
 }
 
-ln -sf /opt/opscode/bin/private-chef-ctl /usr/bin || error_exit "Cannot link private-chef-ctl in /usr/bin"
-ln -sf /opt/opscode/bin/chef-server-ctl /usr/bin || error_exit "Cannot link chef-server-ctl in /usr/bin"
+ln -sf /opt/cinc-project/bin/private-cinc-ctl /usr/bin || error_exit "Cannot link private-chef-ctl in /usr/bin"
+ln -sf /opt/cinc-project/bin/cinc-server-ctl /usr/bin || error_exit "Cannot link chef-server-ctl in /usr/bin"
 
 if [ -L /var/opt/opscode/plugins/chef-ha-drbd.rb ]; then
   rm -f /var/opt/opscode/plugins/chef-ha-drbd.rb
 fi
 
-mkdir -p /etc/opscode
-touch /etc/opscode/chef-server.rb
+mkdir -p /etc/cinc-project
+touch /etc/cinc-project/cinc-server.rb
 # chef-server.rb might contain secrets, restrict permissions of other.
-chmod o-rwx /etc/opscode/chef-server.rb
+chmod o-rwx /etc/cinc-project/cinc-server.rb
 
 # Ensure all files/directories in $INSTALLER_DIR are owned by root. This
 # has been fixed on new installs but upgrades from old installs need to
 # be manually fixed.
-chown -Rh 0:0 /opt/opscode
+chown -Rh 0:0 /opt/cinc-project
 
-if [ -e /etc/opscode/chef-server-running.json ]; then
-  echo -e "\033[1mYou have upgraded Chef Infra Server!\033[0m"
+if [ -e /etc/cinc-project/cinc-server-running.json ]; then
+  echo -e "\033[1mYou have upgraded Cinc Server!\033[0m"
   echo
   echo "The next step in the upgrade process is to run:"
   echo
-  echo -e "\033[1;31mchef-server-ctl upgrade\033[0m"
+  echo -e "\033[1;31mcinc-server-ctl upgrade\033[0m"
   echo
-  echo "After the upgrade command completes, your Chef services will"
+  echo "After the upgrade command completes, your Cinc services will"
   echo "remain in a down state. To bring them back up run:"
   echo
-  echo -e "\033[1;31mchef-server-ctl start\033[0m"
+  echo -e "\033[1;31mcinc-server-ctl start\033[0m"
   echo
   echo "Then, to remove configuration files, logs, directories,"
   echo "users, etc. that were used by internal services that"
   echo "have been removed from this version of Chef Infra Server,"
   echo "please run:"
   echo
-  echo -e "\033[1;31mchef-server-ctl cleanup\033[0m"
+  echo -e "\033[1;31mcinc-server-ctl cleanup\033[0m"
   echo
   echo "(Add the '--no-op' option to see what would be removed by"
   echo "this command)"
