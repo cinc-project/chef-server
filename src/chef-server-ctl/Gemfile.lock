@@ -24,6 +24,7 @@ PATH
 
 GEM
   remote: https://rubygems.org/
+  remote: https://packagecloud.io/cinc-project/stable/
   specs:
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
@@ -398,6 +399,8 @@ DEPENDENCIES
   bundler
   chef (~> 16.17)
   chef-server-ctl!
+  chef-utils (= 16.13.16)
+  chef_backup!
   chefstyle
   rake
   rspec
