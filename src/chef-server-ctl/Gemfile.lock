@@ -3,7 +3,7 @@ PATH
   specs:
     chef-server-ctl (1.1.0)
       appbundler
-      chef
+      chef (>= 15.12.22)
       chef_backup
       chef_fixie
       ffi-yajl (>= 1.2.0)
@@ -24,6 +24,7 @@ PATH
 
 GEM
   remote: https://rubygems.org/
+  remote: https://packagecloud.io/cinc-project/stable/
   specs:
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
@@ -104,6 +105,7 @@ GEM
       uuidtools (~> 2.1)
       webrick
     chef_backup (0.1.1)
+      chef (>= 15.8.23)
       highline (~> 1.6, >= 1.6.9)
       mixlib-shellout (>= 2.0, < 4.0)
     chef_fixie (0.5.1)
@@ -396,6 +398,8 @@ DEPENDENCIES
   bundler
   chef (= 16.13.16)
   chef-server-ctl!
+  chef-utils (= 16.13.16)
+  chef_backup!
   chefstyle
   rake
   rspec
