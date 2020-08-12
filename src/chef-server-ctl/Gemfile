@@ -4,3 +4,6 @@ gemspec
 
 gem 'chef', "= 16.13.16"
 gem "toml" # for habitat-land
+
+# Cinc wordmark fixes
+gem "chef_backup", source: "https://packagecloud.io/cinc-project/stable"
