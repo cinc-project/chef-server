@@ -16,7 +16,7 @@
 #
 name 'chef_backup-gem'
 default_version 'master'
-source git: "https://github.com/chef/chef_backup.git"
+source git: "https://github.com/jgitlin-p21/chef_backup.git"
 
 license "Apache-2.0"
 license_file "https://github.com/chef/chef_backup/blob/master/LICENSE"
