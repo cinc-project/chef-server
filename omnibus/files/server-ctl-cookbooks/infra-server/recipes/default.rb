@@ -23,7 +23,7 @@ require 'English' # for $CHILD_STATUS, etc variables
 # Because these symlinks get removed during the postrm
 # of the chef-server and private-chef packages, we should
 # ensure that they're always here.
-%w(private-chef-ctl chef-server-ctl).each do |bin|
+%w(private-cinc-ctl cinc-server-ctl).each do |bin|
   link "/usr/bin/#{bin}" do
     to "/opt/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/bin/#{bin}"
   end
