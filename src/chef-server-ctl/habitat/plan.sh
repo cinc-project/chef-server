@@ -104,6 +104,16 @@ EOF
   bundle install --path ${RUBY_VENDOR} --binstubs=binstubs
   popd
 
+  # BEGIN CINC Customizations
+  echo "CINC DEBUG: jgitlin: pwd=`pwd`; SRC_PATH=$SRC_PATH; pkg_prefix=$pkg_prefix"
+  echo "CINC DEBUG: ls SRC_PATH: `ls -l $SRC_PATH`"
+  echo "CINC DEBUG: ls pkg_prefix: `ls -l pkg_prefix`"
+  # Copy cinc-wrapper in place
+  cp "${SRC_PATH}/cinc/cinc-wrapper" "${pkg_prefix}/bin"
+  # Patch wrapper with pkd_prefix
+  sed -i "s#/opt/cinc#${pkg_prefix}#g" "${pkg_prefix}/bin/cinc-wrapper"
+  # END CINC Customizations
+
   # Cleanup
   rm -rf "${HOME}/.bundle/cache"
   rm -rf ${RUBY_VENDOR}/ruby/*/cache
