@@ -11,12 +11,34 @@ function error_exit
 	exit 1
 }
 
-ln -sf /opt/cinc-project/bin/private-cinc-ctl /usr/bin || error_exit "Cannot link private-chef-ctl in /usr/bin"
-ln -sf /opt/cinc-project/bin/cinc-server-ctl /usr/bin || error_exit "Cannot link chef-server-ctl in /usr/bin"
+ln -sf /opt/cinc-project/bin/private-cinc-ctl /usr/bin || error_exit "Cannot link private-cinc-ctl in /usr/bin"
+ln -sf /opt/cinc-project/bin/cinc-server-ctl /usr/bin || error_exit "Cannot link cinc-server-ctl in /usr/bin"
 
 if [ -L /var/opt/opscode/plugins/chef-ha-drbd.rb ]; then
   rm -f /var/opt/opscode/plugins/chef-ha-drbd.rb
 fi
+
+
+
+# TODO: Kill this; it is needed only during development of the CINC Patching process
+if [ ! -x /opt/opscode ]; then
+  ln -s /opt/cinc-project /opt/opscode
+fi
+
+wrapper_links="chef-server-ctl chef-client"
+link_target="cinc-wrapper"
+for link in $wrapper_links; do
+  if [ ! -e $PREFIX/bin/$link ]; then
+    echo "Symlinking $link command to cinc-wrapper for compatibility..."
+    ln -sf $INSTALLER_DIR/bin/$link_target $PREFIX/bin/$link || error_exit "Cannot link $link_target to $PREFIX/bin/$link"
+  fi
+done
+
+# TODO: Clean up these hacks when they are no longer needed
+# This is a temporary workaround until patches can be made to no longer call these:
+ln -s $INSTALLER_DIR/bin/$link_target /opt/opscode/embedded/bin/chef-client
+ln -s $INSTALLER_DIR/bin/$link_target /opt/opscode/bin/chef-solo
+ln -s $INSTALLER_DIR/bin/$link_target /opt/opscode/bin/chef-server-ctl
 
 mkdir -p /etc/cinc-project
 touch /etc/cinc-project/cinc-server.rb
