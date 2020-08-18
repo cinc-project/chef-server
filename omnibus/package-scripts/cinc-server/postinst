@@ -39,6 +39,7 @@ done
 ln -s $INSTALLER_DIR/bin/$link_target /opt/opscode/embedded/bin/chef-client
 ln -s $INSTALLER_DIR/bin/$link_target /opt/opscode/bin/chef-solo
 ln -s $INSTALLER_DIR/bin/$link_target /opt/opscode/bin/chef-server-ctl
+ln -s $INSTALLER_DIR/bin/$link_target /opt/opscode/bin/private-chef-ctl
 
 mkdir -p /etc/cinc-project
 touch /etc/cinc-project/cinc-server.rb
