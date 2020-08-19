@@ -67,3 +67,9 @@ dependency "oc_erchef"
 dependency "oc-chef-pedant"
 dependency "private-chef-upgrades"
 dependency "private-chef-cookbooks"
+
+# Cinc Wrapper Install
+copy "#{project_dir}/cinc/cinc-wrapper", "#{install_dir}/bin/"
+%w(chef-apply chef-client chef-shell chef-solo inspec chef-server-ctl private-chef-ctl).each do |bin|
+  link "#{install_dir}/bin/cinc-wrapper", "#{install_dir}/bin/#{bin}"
+end
