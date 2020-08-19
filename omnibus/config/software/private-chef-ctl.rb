@@ -48,7 +48,7 @@ build do
   link "#{install_dir}/bin/cinc-server-ctl", "#{install_dir}/embedded/bin/private-cinc-ctl"
 
   # Cinc Wrapper Install
-  copy "#{project_dir}/cinc/cinc-wrapper", "#{install_dir}/bin/"
+  copy "#{project_dir}/../../cinc/cinc-wrapper", "#{install_dir}/bin/"
   %w(chef-server-ctl private-chef-ctl).each do |bin|
     link "#{install_dir}/bin/cinc-wrapper", "#{install_dir}/bin/#{bin}"
   end
