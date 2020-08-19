@@ -70,9 +70,3 @@ dependency "private-chef-cookbooks"
 
 # ruby cleanup that's specific to how oc-id is installed in server
 dependency "more-ruby-cleanup-server"
-
-# Cinc Wrapper Install
-copy "#{project_dir}/cinc/cinc-wrapper", "#{install_dir}/bin/"
-%w(chef-apply chef-client chef-shell chef-solo inspec chef-server-ctl private-chef-ctl).each do |bin|
-  link "#{install_dir}/bin/cinc-wrapper", "#{install_dir}/bin/#{bin}"
-end
