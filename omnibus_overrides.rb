@@ -11,6 +11,7 @@ override :chef, version: "v15.12.22"
 override :ohai, version: "v15.12.0"
 override :ruby, version: "2.6.5"
 override :perl, version: "5.18.1"
+override :nokogiri, version: "1.10.10" # if not pinned it forces the entire stack to rebuild
 
 
 # This SHA is the last commit before the 6.0 release
