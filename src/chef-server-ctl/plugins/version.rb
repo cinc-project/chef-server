@@ -13,8 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 require 'json'
+require "chef"
 
-add_command_under_category "version", "general", "Display current version of Chef Server.", 2 do
+add_command_under_category "version", "general", "Display current version of #{Chef::Dist::SERVER_PRODUCT}.", 2 do
 
   begin
     # detect if running as a habitat service
@@ -24,6 +25,7 @@ add_command_under_category "version", "general", "Display current version of Che
     # isn't appropriate in all cases.  One option would be to ask the
     # LB for our version, but then the version command won't work when
     # we are offline.
+
     if File.exist?('/hab/svc/chef-server-ctl/PID')
       ident_file = File.read('../IDENT')
       version = "chef-server #{ident_file.split('/')[2]}"

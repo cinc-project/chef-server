@@ -2,16 +2,16 @@
 # When updating this, check doc/FrequentTasks.md for checklists to ensure all
 # the various usages are updated in lockstep
 #
-override :rabbitmq, version: "3.6.15"
-override :erlang, version: "20.3.8.9"
+override :erlang, version: "22.2"
 override :lua, version: "5.1.5"
 override :rubygems, version: "3.0.3"
 override :bundler, version: "1.17.2"  # pin to avoid double bundle error
 override :'omnibus-ctl', version: "master"
-override :chef, version: "v15.8.23"
-override :ohai, version: "v15.7.4"
+override :chef, version: "v15.12.22"
+override :ohai, version: "v15.12.0"
 override :ruby, version: "2.6.5"
 override :perl, version: "5.18.1"
+override :nokogiri, version: "1.10.10" # if not pinned it forces the entire stack to rebuild
 
 
 # This SHA is the last commit before the 6.0 release

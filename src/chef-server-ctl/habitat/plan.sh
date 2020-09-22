@@ -70,9 +70,6 @@ do_install() {
   cp -pr ${pedant_src_dir} ${pkg_prefix}
   export pedant_dir="${pkg_prefix}/oc-chef-pedant"
 
-  # TODO: declare chef gem dependency in oc-chef-pedant
-  cp Gemfile.local "${pedant_dir}/Gemfile.local"
-
   # in pedant dir bundle install
   pushd ${pedant_dir}
   bundle update
@@ -88,7 +85,7 @@ do_install() {
 
   cat > Gemfile << EOF
 source 'https://rubygems.org'
-gem 'chef', '~>14.5.0'
+gem 'chef', '~>15.12.22'
 gem 'knife-opc'
 EOF
 
@@ -106,6 +103,16 @@ EOF
   bundle config binstubs binstubs
   bundle install --path ${RUBY_VENDOR} --binstubs=binstubs
   popd
+
+  # BEGIN CINC Customizations
+  echo "CINC DEBUG: jgitlin: pwd=`pwd`; SRC_PATH=$SRC_PATH; pkg_prefix=$pkg_prefix"
+  echo "CINC DEBUG: ls SRC_PATH: `ls -l $SRC_PATH`"
+  echo "CINC DEBUG: ls pkg_prefix: `ls -l pkg_prefix`"
+  # Copy cinc-wrapper in place
+  cp "${SRC_PATH}/cinc/cinc-wrapper" "${pkg_prefix}/bin"
+  # Patch wrapper with pkd_prefix
+  sed -i "s#/opt/cinc#${pkg_prefix}#g" "${pkg_prefix}/bin/cinc-wrapper"
+  # END CINC Customizations
 
   # Cleanup
   rm -rf "${HOME}/.bundle/cache"
