@@ -36,7 +36,6 @@ done
 
 # TODO: jgitlin: this should be $PREFIX/bin but that breaks because somewhere /bin is hardcoded?
 echo "Symlinking cinc-wrapper (INSTALLER_DIR=$INSTALLER_DIR; PREFIX=$PREFIX)"
-echo "DEBUG env: `env`"
 ln -sf /opt/opscode/bin/cinc-wrapper /bin/cinc-wrapper || error_exit "Cannot link cinc-wrapper to /bin/cinc-wrapper"
 
 # TODO: Clean up these hacks when they are no longer needed
@@ -81,9 +80,9 @@ if [ -e /etc/cinc-project/cinc-server-running.json ]; then
   echo "For detailed upgrade instructions please see:"
   echo "https://docs.chef.io/server/upgrades/"
 else
-  echo -e "\033[1mThank you for installing Chef Infra Server!\033[0m"
+  echo -e "\033[1mThank you for installing Cinc Server!\033[0m"
   echo
-  echo "Run 'chef-server-ctl reconfigure' to configure your Chef Infra Server"
+  echo "Run 'cinc-server-ctl reconfigure' to configure your Cinc Server"
   echo
   echo "For more information on getting started see https://docs.chef.io/server/"
 fi
