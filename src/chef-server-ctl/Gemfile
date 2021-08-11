@@ -5,5 +5,11 @@ gemspec
 gem 'chef', "= 16.13.16"
 gem "toml" # for habitat-land
 
+# Cinc patched gems
+gem "chef-utils", source: "https://packagecloud.io/cinc-project/stable"
+gem "chef-zero", source: "https://packagecloud.io/cinc-project/stable"
+gem "inspec-core", source: "https://packagecloud.io/cinc-project/stable"
+gem "mixlib-install", source: "https://packagecloud.io/cinc-project/stable"
+
 # Cinc wordmark fixes
 gem "chef_backup", source: "https://packagecloud.io/cinc-project/stable"
