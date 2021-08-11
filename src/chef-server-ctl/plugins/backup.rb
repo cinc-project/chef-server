@@ -2,9 +2,9 @@ require 'chef_backup'
 require 'chef/mixin/deep_merge'
 require 'optparse'
 require 'ostruct'
-require "chef-config/dist"
+require "chef-utils/dist"
 
-add_command_under_category 'backup', 'general', "Backup the #{Chef::Dist::SERVER_PRODUCT}", 2 do
+add_command_under_category 'backup', 'general', "Backup the #{ChefUtils::Dist::Server::PRODUCT}", 2 do
   ensure_configured!
   ensure_rsync!
 
@@ -13,7 +13,7 @@ add_command_under_category 'backup', 'general', "Backup the #{Chef::Dist::SERVER
   options.config_only = false
 
   OptionParser.new do |opts|
-    opts.banner = "Usage: #{ChefConfig::Dist::SHORT}-server-ctl backup [options]"
+    opts.banner = "Usage: #{ChefUtils::Dist::Server::SERVER_CTL} backup [options]"
 
     opts.on('-y', '--yes', 'Agree to go offline during tar based backups') do
       options.agree_to_go_offline = true
@@ -49,7 +49,7 @@ add_command_under_category 'backup', 'general', "Backup the #{Chef::Dist::SERVER
   exit(0)
 end
 
-add_command_under_category 'restore', 'general', "Restore the #{Chef::Dist::SERVER_PRODUCT} from backup", 2 do
+add_command_under_category 'restore', 'general', "Restore the #{ChefUtils::Dist::Server::PRODUCT} from backup", 2 do
   ensure_rsync!
 
   options = OpenStruct.new
@@ -57,13 +57,13 @@ add_command_under_category 'restore', 'general', "Restore the #{Chef::Dist::SERV
   options.restore_dir = nil
 
   OptionParser.new do |opts|
-    opts.banner = "Usage: #{ChefConfig::Dist::SHORT}-server-ctl restore $PATH_TO_BACKUP_TARBALL [options]"
+    opts.banner = "Usage: #{ChefUtils::Dist::Server::SERVER_CTL} restore $PATH_TO_BACKUP_TARBALL [options]"
 
     opts.on('-d', '--staging-dir [directory]', String, 'The path to an empty directory for use in restoration.  Ensure it has enough available space for all expanded data in the backup archive') do |staging_directory|
       options.restore_dir = File.expand_path(staging_directory)
     end
 
-    opts.on('-c', '--cleanse', "Agree to cleansing all existing state during a restore.  THIS WILL COMPLETELY REMOVING EXISTING #{Chef::Dist::SERVER_PRODUCT.upcase} DATA") do
+    opts.on('-c', '--cleanse', "Agree to cleansing all existing state during a restore.  THIS WILL COMPLETELY REMOVING EXISTING #{ChefUtils::Dist::Server::PRODUCT.upcase} DATA") do
       options.agree_to_cleanse = 'yes'
     end
 
@@ -83,7 +83,7 @@ add_command_under_category 'restore', 'general', "Restore the #{Chef::Dist::SERV
 
   unless ARGV.length >= 2
     log('Invalid command', :error)
-    log("USAGE: #{ChefConfig::Dist::SHORT}-server-ctl restore $PATH_TO_BACKUP_TARBALL [options]", :error)
+    log("USAGE: #{ChefUtils::Dist::Server::SERVER_CTL} restore $PATH_TO_BACKUP_TARBALL [options]", :error)
     exit(1)
   end
 
@@ -110,7 +110,7 @@ end
 
 def ensure_configured!
   unless running_config
-    log("You must reconfigure the #{Chef::Dist::SERVER_PRODUCT} before a backup can be performed", :error)
+    log("You must reconfigure the #{ChefUtils::Dist::Server::PRODUCT} before a backup can be performed", :error)
     exit(1)
   end
 end
