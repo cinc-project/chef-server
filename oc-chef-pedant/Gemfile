@@ -13,9 +13,14 @@ gem 'rake'
 gem 'chef', "16.13.16"
 
 # Cinc patched gems
-gem "chef-utils", source: "https://packagecloud.io/cinc-project/stable"
+gem "chef-utils", "= 16.13.16", source: "https://packagecloud.io/cinc-project/stable"
 gem "chef-zero", source: "https://packagecloud.io/cinc-project/stable"
-gem "inspec-core", source: "https://packagecloud.io/cinc-project/stable"
+gem "inspec-core", "= 4.37.30", source: "https://packagecloud.io/cinc-project/stable"
+# Pins for 14.6 release
+gem "chef-telemetry", "= 1.0.29"
+gem "faraday", "= 1.4.2"
+gem "faraday_middleware", "= 1.0.0"
+gem "ruby2_keywords", "= 0.0.4"
 
 # For "rake chef_zero_spec"
 #gem 'chef-zero', github: 'chef/chef-zero'
