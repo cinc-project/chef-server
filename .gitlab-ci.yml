@@ -10,6 +10,7 @@ workflow:
 server-testing:
   stage: test
   variables:
+    REF: 14.6.32
     CINC_REF: $CI_COMMIT_REF_NAME
   trigger:
     project: cinc-project/distribution/server
