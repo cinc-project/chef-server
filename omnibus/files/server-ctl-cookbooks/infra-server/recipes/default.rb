@@ -24,7 +24,7 @@ require 'openssl'
 # ensure that they're always here.
 %w(private-cinc-ctl cinc-server-ctl).each do |bin|
   link "/usr/bin/#{bin}" do
-    to "/opt/opscode/bin/#{bin}"
+    to "/opt/cinc-project/bin/#{bin}"
   end
 end
 
