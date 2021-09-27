@@ -38,14 +38,11 @@ done
 echo "Symlinking cinc-wrapper (INSTALLER_DIR=$INSTALLER_DIR; PREFIX=$PREFIX)"
 ln -sf /opt/opscode/bin/cinc-wrapper /bin/cinc-wrapper || error_exit "Cannot link cinc-wrapper to /bin/cinc-wrapper"
 
-# TODO: Clean up these hacks when they are no longer needed
-# This is a temporary workaround until patches can be made to no longer call these:
-ln -s $INSTALLER_DIR/bin/$link_target /opt/opscode/embedded/bin/chef-client
-ln -s $INSTALLER_DIR/bin/$link_target /opt/opscode/bin/chef-solo
-ln -s $INSTALLER_DIR/bin/$link_target /opt/opscode/bin/chef-server-ctl
-ln -s $INSTALLER_DIR/bin/$link_target /opt/opscode/bin/private-chef-ctl
-
 mkdir -p /etc/cinc-project
+# TODO: Remove this /opt/cincproject link
+# it's needed until we can use this commit https://gitlab.com/cinc-project/upstream/chef/-/commit/0145f9355d2d829aeeee4d86abf6b3b5a446fad9
+ln -s /opt/cinc-project /opt/cincproject
+
 touch /etc/cinc-project/cinc-server.rb
 # chef-server.rb might contain secrets, restrict permissions of other.
 chmod o-rwx /etc/cinc-project/cinc-server.rb
