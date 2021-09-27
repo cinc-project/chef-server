@@ -399,8 +399,6 @@ DEPENDENCIES
   bundler
   chef (= 16.13.16)
   chef-server-ctl!
-  chef-utils (= 16.13.16)
-  chef_backup!
   chefstyle
   rake
   rspec

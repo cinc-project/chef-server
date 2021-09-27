@@ -16,6 +16,8 @@
 # limitations under the License.
 #
 
+require "English"
+
 postgresql_dir = node['private_chef']['postgresql']['dir']
 postgresql_data_dir = node['private_chef']['postgresql']['data_dir']
 postgresql_data_dir_symlink = File.join(postgresql_dir, 'data')
