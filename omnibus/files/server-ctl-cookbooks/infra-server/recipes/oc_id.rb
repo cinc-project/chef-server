@@ -168,6 +168,11 @@ execute "chown -R #{OmnibusHelper.new(node).ownership['owner']}:#{OmnibusHelper.
   end
 end
 
+# TODO Cinc: This should be removed later
+link "/etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/private-#{ChefUtils::Dist::Infra::SHORT}-secrets.json" do
+  to "/etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/private-chef-secrets.json"
+end
+
 veil_helper_args = '--use-file -s chef-server.webui_key -s oc_id.sql_password -s oc_id.secret_key_base'
 execute 'oc_id_schema' do
   command "veil-env-helper #{veil_helper_args} -- bundle exec --keep-file-descriptors rake db:migrate"
