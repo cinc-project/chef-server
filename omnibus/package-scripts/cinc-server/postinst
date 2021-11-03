@@ -39,6 +39,13 @@ echo "Symlinking cinc-wrapper (INSTALLER_DIR=$INSTALLER_DIR; PREFIX=$PREFIX)"
 ln -sf /opt/opscode/bin/cinc-wrapper /bin/cinc-wrapper || error_exit "Cannot link cinc-wrapper to /bin/cinc-wrapper"
 
 mkdir -p /etc/cinc-project
+
+# TODO: remove this symlink
+if [ ! -x /etc/opscode ]; then
+  ln -s /etc/cinc-project /etc/opscode
+  ln -s /etc/cinc-project /etc/cincproject
+fi
+
 # TODO: Remove this /opt/cincproject link
 # it's needed until we can use this commit https://gitlab.com/cinc-project/upstream/chef/-/commit/0145f9355d2d829aeeee4d86abf6b3b5a446fad9
 ln -s /opt/cinc-project /opt/cincproject
