@@ -38,12 +38,18 @@ done
 echo "Symlinking cinc-wrapper (INSTALLER_DIR=$INSTALLER_DIR; PREFIX=$PREFIX)"
 ln -sf /opt/opscode/bin/cinc-wrapper /bin/cinc-wrapper || error_exit "Cannot link cinc-wrapper to /bin/cinc-wrapper"
 
-mkdir -p /etc/cinc-project
 
 # TODO: remove this symlink
 if [ ! -x /etc/opscode ]; then
+  mkdir -p /etc/cinc-project
   ln -s /etc/cinc-project /etc/opscode
   ln -s /etc/cinc-project /etc/cincproject
+else
+  mv -v /etc/cinc-project/cinc-server.rb /etc/opscode/cinc-server.rb
+  rmdir -v /etc/cinc-project
+  ln -sv /etc/opscode /etc/cinc-project
+  ln -sv /etc/opscode /etc/cincproject
+  ln -sv /etc/cinc /etc/chef
 fi
 
 # TODO: Remove this /opt/cincproject link
