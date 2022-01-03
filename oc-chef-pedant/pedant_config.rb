@@ -68,6 +68,7 @@ default_orgname nil
 # poll for a period to ensure they are querying committed results.
 search_server "http://127.0.0.1:8983"
 
+
 # Related to the 'search_server' parameter, this specifies the maximum
 # amout of time (in seconds) that search endpoint requests should be
 # retried before giving up.  If not explicitly set, it will default to

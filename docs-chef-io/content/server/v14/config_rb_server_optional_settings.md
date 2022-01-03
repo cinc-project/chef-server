@@ -1472,6 +1472,22 @@ Be careful if increasing this number - requests for a given set of cookbook vers
 not occur if you increment the version of a cookbook with every cookbook update, which is the recommended approach to updating cookbooks.
 {{< /note >}}
 
+### OpenSearch
+
+This configuration file has the following settings for `opensearch`:
+
+`opensearch['external']`
+
+: Enable external `opensearch` service by setting `true`. Default value: `false`.
+
+`opensearch['external_url']`
+
+: External opensearch url. Example: `http://127.0.0.1:9200`. Default value: `nil`
+
+{{< note >}}
+Chef Infra Server supports OpenSearch only as an external indexing provider. Both `external` and `external_url` must be provided under this configuration.
+{{< /note >}}
+
 ### Elasticsearch
 
 This configuration file has the following settings for `elasticsearch`:
