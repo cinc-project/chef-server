@@ -46,6 +46,16 @@ Chef Infra Server 14.0 moved from Solr to Elasticsearch as its search index.
 
 The Chef Infra Server 14 upgrade does not automatically reindex existing external Elasticsearch installations.
 
+#### Upgrading to 14.13
+
+Chef Infra Server 14.13 supports External Opensearch for indexing. Migrating from Elasticsearch to External Opensearch needs ontime reindexing and reconfigure after upgrade. This process may take longer depending on your server hardware and the size of the node objects on your Chef Infra Server.
+
+{{< note >}}
+
+Set the `opensearch['external']` & `opensearch['external_url']` attribute in [chef-server.rb]({{< relref "config_rb_server_optional_settings" >}}) to enable external Opensearch for indexing.
+
+{{</note >}}
+
 #### Upgrading to 14.8
 
 Chef Infra Server 14.8 upgrades PostgreSQL from 9.6 to 13.3. The 14.8 upgrade process requires a one-time downtime to vacuum, upgrade, and re-index the database. The entire upgrade operation takes about one minute for each 1000 nodes (1000 nodes is approximately 286MB). This process may take longer depending on your server hardware and the size of the node objects on your Chef Infra Server.

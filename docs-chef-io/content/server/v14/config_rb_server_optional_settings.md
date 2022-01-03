@@ -1472,6 +1472,22 @@ Be careful if increasing this number - requests for a given set of cookbook vers
 not occur if you increment the version of a cookbook with every cookbook update, which is the recommended approach to updating cookbooks.
 {{< /note >}}
 
+### Opensearch
+
+This configuration file has the following settings for `opensearch`:
+
+`opensearch['external']`
+
+: Enable external `opensearch` service by setting `true`. Default value: `false`.
+
+`opensearch['external_url']`
+
+: External opensearch url. Example: `http://127.0.0.1:9200`. Default value: `nil`
+
+{{< note >}}
+Currently chef-server supports only external opensearch service. The above configurations are required for enabling the external opensearch service.
+{{< /note >}}
+
 ### Elasticsearch
 
 This configuration file has the following settings for `elasticsearch`:
