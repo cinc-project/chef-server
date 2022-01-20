@@ -38,7 +38,11 @@ describe PrivateChef do
     allow(PrivateChef).to receive(:node).and_return(node)
     allow(PrivateChef).to receive(:exit!).and_raise(SystemExit)
     allow_any_instance_of(Veil::CredentialCollection::ChefSecretsFile).to receive(:save).and_return(true)
+<<<<<<< HEAD
     allow(File).to receive(:exists?).with("/etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/private-#{ChefUtils::Dist::Infra::SHORT}-secrets.json").and_return(false)
+=======
+    allow(File).to receive(:exists?).with("/etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/private-chef-secrets.json").and_return(false)
+>>>>>>> b6166b381 (feat: replace opscode from folder names, remove hardcodes of chef-server.rb)
   end
 
   # Example content of /etc/opscode/private-chef-secrets.json
@@ -184,7 +188,11 @@ EOF
     end
 
     before do
+<<<<<<< HEAD
       allow(File).to receive(:exists?).with("/etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/private-#{ChefUtils::Dist::Infra::SHORT}-secrets.json").and_return false
+=======
+      allow(File).to receive(:exists?).with("/etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/private-chef-secrets.json").and_return false
+>>>>>>> b6166b381 (feat: replace opscode from folder names, remove hardcodes of chef-server.rb)
     end
 
     it 'exits with a clear error warning that HA is unsupported' do
@@ -220,7 +228,11 @@ EOF
     end
 
     before do
+<<<<<<< HEAD
       allow(File).to receive(:exists?).with("/etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/private-#{ChefUtils::Dist::Infra::SHORT}-secrets.json").and_return false
+=======
+      allow(File).to receive(:exists?).with("/etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/private-chef-secrets.json").and_return false
+>>>>>>> b6166b381 (feat: replace opscode from folder names, remove hardcodes of chef-server.rb)
     end
 
     it 'generates secrets on the bootstrap node' do

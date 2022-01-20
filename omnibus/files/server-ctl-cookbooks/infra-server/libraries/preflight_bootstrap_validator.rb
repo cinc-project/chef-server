@@ -119,7 +119,11 @@ class BootstrapPreflightValidator < PreflightValidator
   def err_BOOT002_pivotal_key_exists
     <<~EOM
       BOOT002: Your configuration indicates that you are running an initial reconfigure
+<<<<<<< HEAD
                to bring your #{ChefUtils::Dist::Server::PRODUCT} online, but the file /etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/pivotal.pem
+=======
+               to bring your Chef Infra Server online, but the file /etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/pivotal.pem
+>>>>>>> b6166b381 (feat: replace opscode from folder names, remove hardcodes of chef-server.rb)
                already exists.
 
                Pending: remediation walkthrough.
@@ -157,8 +161,13 @@ class BootstrapPreflightValidator < PreflightValidator
 
   def err_BOOT008_pivotal_public_key_mismatch
     <<~EOM
+<<<<<<< HEAD
       BOOT008: The pivotal key in /etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/private-#{ChefUtils::Dist::Infra::SHORT}-secrets.json exists, but its public key
                does not match the key for the pivotal user in #{ChefUtils::Dist::Server::SERVER}.
+=======
+      BOOT008: The pivotal key in /etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/private-chef-secrets.json exists, but its public key
+               does not match the key for the pivotal user in chef-server.
+>>>>>>> b6166b381 (feat: replace opscode from folder names, remove hardcodes of chef-server.rb)
 
                Critical maintenance operations cannot be performed.
 
@@ -182,7 +191,11 @@ class BootstrapPreflightValidator < PreflightValidator
                already exists in the database.
 
                Please ensure that you have copied the files 'pivotal.pem' and
+<<<<<<< HEAD
                'private-#{ChefUtils::Dist::Infra::SHORT}-secrets.json' from the node to be reconfigured
+=======
+               'private-chef-secrets.json' from the node to be reconfigured
+>>>>>>> b6166b381 (feat: replace opscode from folder names, remove hardcodes of chef-server.rb)
                into '/etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/' on this node before attempting to run
                reconfigure again.
     EOM
@@ -194,7 +207,11 @@ class BootstrapPreflightValidator < PreflightValidator
                does not exist in the database.
 
                If this is the first node you're attempting to reconfigure,
+<<<<<<< HEAD
                please remove the file 'private-#{ChefUtils::Dist::Infra::SHORT}-secrets.json'
+=======
+               please remove the file 'private-chef-secrets.json'
+>>>>>>> b6166b381 (feat: replace opscode from folder names, remove hardcodes of chef-server.rb)
                from '/etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}' before attempting to run reconfigure again.
     EOM
   end
