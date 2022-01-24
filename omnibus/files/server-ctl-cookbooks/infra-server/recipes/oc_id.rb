@@ -186,7 +186,7 @@ execute 'oc_id_schema' do
   environment('RAILS_ENV' => 'production',
               'VERSION' => `ls -1 /opt/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/embedded/service/oc_id/db/migrate | tail -n 1 | sed -e "s/_.*//g"`.chomp,
               'PATH' => "/opt/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/embedded/bin")
-  sensitive true
+  # sensitive true
   only_if { is_data_master? }
 end
 

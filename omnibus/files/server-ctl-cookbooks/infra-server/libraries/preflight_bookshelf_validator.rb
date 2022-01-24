@@ -54,11 +54,7 @@ class BookshelfPreflightValidator < PreflightValidator
 
           bookshelf['storage_type'] = 'filesystem'
 
-<<<<<<< HEAD
           in /etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/#{ChefUtils::Dist::Server::SERVER}.rb or leave it unset.
-=======
-          in /etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/chef-server.rb or leave it unset.
->>>>>>> b6166b381 (feat: replace opscode from folder names, remove hardcodes of chef-server.rb)
         EOM
       elsif previous_value.to_s == current_value # case (5)
         true
@@ -74,10 +70,14 @@ class BookshelfPreflightValidator < PreflightValidator
           bookshelf['storage_type'] = '#{previous_value}'
 
 <<<<<<< HEAD
+<<<<<<< HEAD
           in /etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/#{ChefUtils::Dist::Server::SERVER}.rb
 =======
           in /etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/chef-server.rb
 >>>>>>> b6166b381 (feat: replace opscode from folder names, remove hardcodes of chef-server.rb)
+=======
+          in /etc/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/#{ChefUtils::Dist::Server::SERVER}.rb
+>>>>>>> 46653dcfa (feat: replace opscode in folder names)
         EOM
 
       end

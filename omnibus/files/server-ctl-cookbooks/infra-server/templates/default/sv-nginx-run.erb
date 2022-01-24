@@ -6,9 +6,5 @@ exec /opt/<%= ChefUtils::Dist::Org::LEGACY_CONF_DIR %>/embedded/bin/veil-env-hel
   -U <%= node['private_chef']['user']['username'] %> \
   -u <%= node['private_chef']['user']['username'] %> \
   <% end %>
-<<<<<<< HEAD
   -P env TZ=UTC <%= "OPENSSL_CONF=/opt/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/embedded/ssl/openssl.fips.cnf" if node['private_chef']['fips_enabled'] %> \
-=======
-  -P env TZ=UTC <%= "OPENSSL_CONF=/opt/<%= ChefUtils::Dist::Org::LEGACY_CONF_DIR %>/embedded/ssl/openssl.fips.cnf" if node['private_chef']['fips_enabled'] %> \
->>>>>>> b6166b381 (feat: replace opscode from folder names, remove hardcodes of chef-server.rb)
   /opt/<%= ChefUtils::Dist::Org::LEGACY_CONF_DIR %>/embedded/sbin/nginx -c <%= File.join(node['private_chef']['nginx']['dir'], "etc", "nginx.conf") %>
