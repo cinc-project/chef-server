@@ -2,8 +2,14 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "chef", "= 16.13.16"
+gem "chef", "= 16.13.16", source: "https://packagecloud.io/cinc-project/stable"
 gem "toml" # for habitat-land
 
 # Cinc wordmark fixes
 gem "chef_backup", source: "https://packagecloud.io/cinc-project/stable"
+gem "mixlib-install", source: "https://packagecloud.io/cinc-project/stable"
+# Version lock these to match Gemfile.lock
+gem "inspec-core", "= 4.46.13", source: "https://packagecloud.io/cinc-project/stable"
+gem "ohai", "= 16.13.0"
+gem "chef-vault", "= 4.1.4"
+gem "ed25519", "= 1.2.4"
