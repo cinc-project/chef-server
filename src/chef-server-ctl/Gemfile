@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "chef", "~> 16.17", source: "https://packagecloud.io/cinc-project/stable"
+gem "chef", "~> 16.17", source: "https://packagecloud.io/cinc-project/server-dev"
 gem "toml" # for habitat-land
 
 # Cinc wordmark fixes
