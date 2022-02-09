@@ -8,6 +8,8 @@ gem "toml" # for habitat-land
 # Cinc wordmark fixes
 gem "chef_backup", source: "https://packagecloud.io/cinc-project/stable"
 gem "mixlib-install", source: "https://packagecloud.io/cinc-project/stable"
+# WIP PR
+gem "omnibus-ctl", git: "https://github.com/aleksey-hariton/omnibus-ctl.git", branch: 'main'
 
 # Version lock these to match Gemfile.lock when doing a stable release
 if ENV['CHANNEL'] == 'stable'
