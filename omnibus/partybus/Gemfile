@@ -1,6 +1,7 @@
 source "http://rubygems.org"
 
 gem "sequel", "~> 3.34.1"
+gem "chef-utils", source: "https://packagecloud.io/cinc-project/stable"
 
 gem "pg", "~> 0.16.0"
 gem "veil", "0.3.9"
