@@ -3,4 +3,5 @@ source "https://rubygems.org"
 gem "sequel", "~> 3.34.1"
 gem "pg", "~> 0.16.0"
 gem "veil", "0.3.11"
-gem "chef-utils", "~> 16.17"
+gem "chef-utils", "~> 16.17",
+  source: "https://packagecloud.io/cinc-project/stable"
