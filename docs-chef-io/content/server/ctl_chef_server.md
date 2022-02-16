@@ -955,6 +955,17 @@ This subcommand has the following options:
     option only works when run on a standalone Chef Infra Server or on a
     primary backend Chef server within a legacy tier.
 
+{{< note >}}
+If the search does not work when data is present even after reindex, please verify the configurations of the search index. The following command will get the configuration of search index :
+  ```bash
+  curl -XGET http://127.0.0.1:9200/_all/_settings`
+  ```
+Make sure that the attribute `read_only_allow_delete` is not set to true. The following command will reset the configuration of search index :
+  ```bash
+  curl -XPUT -H "Content-Type: application/json" http://127.0.0.1:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
+  ```
+{{< /note >}}
+
 ## Server Admins
 
 {{% server_rbac_server_admins %}}

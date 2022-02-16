@@ -148,6 +148,17 @@ The Chef Infra Server HA install documentation includes a [second process](https
     chef-server-ctl reindex --all
     ```
 
+{{< note >}}
+If the search does not work when data is present even after reindex, please verify the configurations of the search index. The following command will get the configuration of search index :
+  ```bash
+  curl -XGET http://127.0.0.1:9200/_all/_settings`
+  ```
+Make sure that the attribute `read_only_allow_delete` is not set to true. The following command will reset the configuration of search index :
+  ```bash
+  curl -XPUT -H "Content-Type: application/json" http://127.0.0.1:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
+  ```
+{{< /note >}}
+
 ### Verify
 
 The best practice for maintaining useful backup is to periodically verify your backup by restoring:
