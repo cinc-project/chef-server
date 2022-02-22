@@ -14,11 +14,11 @@ function error_exit
 warn_about_search_reindex() {
     # If this is a fresh install, we don't need to worry about the
     # solr migration
-    if [ ! -e /etc/opscode/chef-server-running.json ]; then
+    if [ ! -e /etc/cinc-project/cinc-server-running.json ]; then
         return
     fi
 
-    if [ -d /opt/opscode/sv/opscode-solr4 ]; then
+    if [ -d /opt/cinc-project/sv/opscode-solr4 ]; then
         echo "############################ NOTICE ##################################"
         echo ""
         echo "It appears that this Cinc Server has Solr enabled."
