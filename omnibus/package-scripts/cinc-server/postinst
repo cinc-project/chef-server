@@ -18,6 +18,7 @@ if [ -L /var/opt/cinc-project/plugins/chef-ha-drbd.rb ]; then
   rm -f /var/opt/cinc-project/plugins/chef-ha-drbd.rb
 fi
 
+# Cinc wrappers
 wrapper_links="chef-server-ctl chef-client"
 link_target="cinc-wrapper"
 for link in $wrapper_links; do
@@ -27,10 +28,7 @@ for link in $wrapper_links; do
   fi
 done
 
-# TODO: jgitlin: this should be $PREFIX/bin but that breaks because somewhere /bin is hardcoded?
-echo "Symlinking cinc-wrapper (INSTALLER_DIR=$INSTALLER_DIR; PREFIX=$PREFIX)"
-ln -sf /opt/cinc-project/bin/cinc-wrapper /bin/cinc-wrapper || error_exit "Cannot link cinc-wrapper to /bin/cinc-wrapper"
-
+mkdir -p /etc/cinc-project
 touch /etc/cinc-project/cinc-server.rb
 # chef-server.rb might contain secrets, restrict permissions of other.
 chmod o-rwx /etc/cinc-project/cinc-server.rb
