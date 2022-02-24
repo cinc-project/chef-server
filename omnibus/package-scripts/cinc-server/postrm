@@ -11,6 +11,8 @@ fi
 # So we want to execute the rm if we're NOT rhel-ish, OR the argument is correct.
 # (See also: http://tickets.opscode.com/browse/CHEF-3022)
 if [[ ! ( -e /etc/redhat-release || -e /etc/system-release ) || "$1" == "0" ]]; then
-  rm -f /usr/bin/private-chef-ctl
   rm -f /usr/bin/chef-server-ctl
+  rm -f /usr/bin/cinc-server-ctl
+  rm -f /usr/bin/private-chef-ctl
+  rm -f /usr/bin/private-cinc-ctl
 fi
