@@ -134,11 +134,13 @@ class IndexingPreflightValidator < PreflightValidator
   def verify_search_engine_permissions
     if node['private_chef']['opscode-erchef']['search_provider'] != 'solr'
       search_provider_url = helper.solr_url
-      client = Chef::HTTP.new("#{search_provider_url}/_all/_settings")
-      response = JSON.parse(client.get(''))
-      if response['chef']['settings']['index'].key?('blocks')
-        if response['chef']['settings']['index']['blocks']['read_only_allow_delete']
-          fail_with err_INDEX008_bad_elasticsearch_config
+      begin
+        client = Chef::HTTP.new("#{search_provider_url}/_all/_settings")
+        response = JSON.parse(client.get(''))
+        if response['chef']['settings']['index'].key?('blocks')
+          if response['chef']['settings']['index']['blocks']['read_only_allow_delete']
+            fail_with err_INDEX008_bad_elasticsearch_config
+          end
         end
       end
     end
