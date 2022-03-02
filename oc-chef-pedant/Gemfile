@@ -25,6 +25,7 @@ if ENV['CHANNEL'] == 'stable' || ENV['CHANNEL'] == 'unstable'
   gem 'aws-sdk-secretsmanager', '= 1.57.0'
   gem 'corefoundation', '= 0.3.13'
   gem 'train-winrm', '= 0.2.12'
+  gem 'train-core', '= 3.8.7'
 end
 
 # If you want to load debugging tools into the bundle exec sandbox,

@@ -4,7 +4,7 @@ gemspec
 
 # Version lock these to match Gemfile.lock when doing a stable release
 if ENV['CHANNEL'] == 'stable' || ENV['CHANNEL'] == 'unstable'
-  gem "chef", "= 16.17.39", source: "https://packagecloud.io/cinc-project/stable"
+  gem "chef", "= 16.17.51", source: "https://packagecloud.io/cinc-project/stable"
 else
   gem "chef", "~> 16.17", source: "https://packagecloud.io/cinc-project/stable"
 end
