@@ -25,6 +25,12 @@ build do
 
   command "berks vendor #{install_dir}/embedded/cookbooks", env: env
 
+  # TODO: Temp fix
+  command "#{install_dir}/embedded/bin/gem uninstall -v 16.17.51 -I chef-config"
+  command "#{install_dir}/embedded/bin/gem uninstall -v 16.17.51 -I chef-utils"
+  command "#{install_dir}/embedded/bin/gem install -N --clear-sources -s https://packagecloud.io/cinc-project/stable -v 16.17.51 chef-config"
+  command "#{install_dir}/embedded/bin/gem install -N --clear-sources -s https://packagecloud.io/cinc-project/stable -v 16.17.51 chef-utils"
+
   block do
     File.open("#{install_dir}/embedded/cookbooks/dna.json", "w") do |f|
       run_list = Array.new.tap do |r|
