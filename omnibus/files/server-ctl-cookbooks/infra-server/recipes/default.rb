@@ -101,11 +101,21 @@ directory '/var/opt/opscode' do
   action :create
 end
 
+# TODO: Temporary fix for Cinc
+link '/var/opt/cinc-project' do
+  to '/var/opt/opscode'
+end
+
 directory '/var/log/opscode' do
   owner OmnibusHelper.new(node).ownership['owner']
   group OmnibusHelper.new(node).ownership['group']
   mode '0755'
   action :create
+end
+
+# TODO: Temporary fix for Cinc
+link '/var/log/cinc-project' do
+  to '/var/log/opscode'
 end
 
 include_recipe 'enterprise::runit'
@@ -173,6 +183,11 @@ file '/etc/opscode/chef-server-running.json' do
   group 'root'
   mode '0600'
   content lazy { OmnibusHelper.chef_server_running_content(node) }
+end
+
+# TODO: Temporary fix for Cinc
+link '/etc/opscode/cinc-server-running.json' do
+  to '/etc/opscode/chef-server-running.json'
 end
 
 ruby_block 'print reconfigure warnings' do
