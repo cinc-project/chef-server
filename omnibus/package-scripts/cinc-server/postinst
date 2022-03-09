@@ -4,6 +4,8 @@
 #
 
 PROGNAME=$(basename $0)
+INSTALLER_DIR=/opt/cinc-project
+PREFIX=/usr
 
 function error_exit
 {
