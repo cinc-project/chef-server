@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gemspec
 
 # Version lock these to match Gemfile.lock when doing a stable release
-if ENV['CHANNEL'] == 'stable' || ENV['CHANNEL'] == 'unstable'
+if ENV['CHANNEL'] =~ /stable|unstable|current/
   gem "chef", "= 16.17.51", source: "https://packagecloud.io/cinc-project/stable"
 else
   gem "chef", "~> 16.17", source: "https://packagecloud.io/cinc-project/stable"
@@ -15,7 +15,7 @@ gem "chef_backup", source: "https://packagecloud.io/cinc-project/stable"
 gem "mixlib-install", source: "https://packagecloud.io/cinc-project/stable"
 
 # Version lock these to match Gemfile.lock when doing a stable release
-if ENV['CHANNEL'] == 'stable' || ENV['CHANNEL'] == 'unstable'
+if ENV['CHANNEL'] =~ /stable|unstable|current/
   gem "chef-vault", "= 4.1.5"
   gem "ed25519", "= 1.3.0"
   gem "inspec-core", "= 4.24.32", source: "https://packagecloud.io/cinc-project/stable"

@@ -17,7 +17,7 @@ gem 'chef', "17.9.52",
 #gem 'chef-zero', github: 'chef/chef-zero'
 
 # Version lock these to match Gemfile.lock when doing a stable release
-if ENV['CHANNEL'] == 'stable' || ENV['CHANNEL'] == 'unstable'
+if ENV['CHANNEL'] =~ /stable|unstable|current/
   gem 'aws-partitions', '= 1.556.0'
   gem 'aws-sdk-core', '= 3.126.2'
   gem 'aws-sdk-kms', '= 1.54.0'
