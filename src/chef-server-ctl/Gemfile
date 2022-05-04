@@ -17,10 +17,11 @@ gem "mixlib-install", source: "https://packagecloud.io/cinc-project/stable"
 
 # Version lock these to match Gemfile.lock when doing a stable release
 if ENV['CHANNEL'] =~ /stable|unstable|current/
-  gem "aws-partitions", "= 1.571.0"
-  gem "chef-vault", "= 4.1.5"
-  gem "gyoku", "= 1.3.1"
-  gem "inspec-core", "= 4.56.19", source: "https://packagecloud.io/cinc-project/stable"
+  gem "aws-partitions", "= 1.581.0"
+  gem "aws-sdk-s3", "= 1.113.2"
+  gem "chef-vault", "= 4.1.10"
+  gem "gyoku", "= 1.4.0"
+  gem "inspec-core", "= 4.56.20", source: "https://packagecloud.io/cinc-project/stable"
   gem "ohai", "= 17.9.0"
 else
   gem "inspec-core", source: "https://packagecloud.io/cinc-project/stable"
