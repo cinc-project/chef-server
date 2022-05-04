@@ -3,5 +3,9 @@ source "http://rubygems.org"
 gem "sequel", "~> 3.34.1"
 gem "pg", "~> 0.16.0"
 gem "veil", "0.3.9"
-gem "chef-utils", "~> 16.17",
-  source: "https://packagecloud.io/cinc-project/stable"
+# Version lock these to match Gemfile.lock when doing a stable release
+if ENV['CHANNEL'] =~ /stable|unstable|current/
+  gem "chef-utils", "= 16.17.51", source: "https://packagecloud.io/cinc-project/stable"
+else
+  gem "chef-utils", "~> 16.17", source: "https://packagecloud.io/cinc-project/stable"
+end
