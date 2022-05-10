@@ -5,8 +5,10 @@ gemspec
 # Version lock these to match Gemfile.lock when doing a stable release
 if ENV['CHANNEL'] =~ /stable|unstable|current/
   gem "chef", "= 17.10.0", source: "https://packagecloud.io/cinc-project/stable"
+  gem "knife", "= 17.9.26", source: "https://packagecloud.io/cinc-project/stable"
 else
   gem "chef", "~> 17.10", source: "https://packagecloud.io/cinc-project/stable"
+  gem "knife", source: "https://packagecloud.io/cinc-project/stable"
 end
 
 gem "toml" # for habitat-land
