@@ -5,7 +5,7 @@ gemspec
 # Version lock these to match Gemfile.lock when doing a stable release
 if ENV['CHANNEL'] =~ /stable|unstable|current/
   gem "chef", "= 17.10.0", source: "https://packagecloud.io/cinc-project/stable"
-  gem "knife", "= 17.9.26", source: "https://packagecloud.io/cinc-project/stable"
+  gem "knife", "= 17.10.0", source: "https://packagecloud.io/cinc-project/stable"
 else
   gem "chef", "~> 17.10", source: "https://packagecloud.io/cinc-project/stable"
   gem "knife", source: "https://packagecloud.io/cinc-project/stable"
@@ -15,15 +15,18 @@ gem "toml" # for habitat-land
 
 # Cinc wordmark fixes
 gem "chef_backup", source: "https://packagecloud.io/cinc-project/stable"
-gem "mixlib-install", source: "https://packagecloud.io/cinc-project/stable"
+gem "mixlib-install", "= 3.12.16", source: "https://packagecloud.io/cinc-project/stable"
 
 # Version lock these to match Gemfile.lock when doing a stable release
 if ENV['CHANNEL'] =~ /stable|unstable|current/
-  gem "aws-partitions", "= 1.581.0"
-  gem "aws-sdk-s3", "= 1.113.2"
+  gem "aws-partitions", "= 1.588.0"
+  gem "aws-sdk-core", "= 3.131.0"
+  gem "aws-sdk-s3", "= 1.114.0"
+  gem "aws-sdk-secretsmanager", "= 1.61.0"
   gem "chef-vault", "= 4.1.10"
   gem "gyoku", "= 1.4.0"
   gem "inspec-core", "= 4.56.20", source: "https://packagecloud.io/cinc-project/stable"
+  gem "logging", "= 2.3.0"
   gem "ohai", "= 17.9.0"
 else
   gem "inspec-core", source: "https://packagecloud.io/cinc-project/stable"
