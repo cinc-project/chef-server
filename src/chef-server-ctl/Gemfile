@@ -24,6 +24,7 @@ if ENV['CHANNEL'] =~ /stable|unstable|current/
   gem "aws-sdk-s3", "= 1.114.0"
   gem "aws-sdk-secretsmanager", "= 1.62.0"
   gem "chef-vault", "= 4.1.10"
+  gem "erubi", "= 1.10.0"
   gem "gyoku", "= 1.4.0"
   gem "inspec-core", "= 4.56.20", source: "https://packagecloud.io/cinc-project/stable"
   gem "logging", "= 2.3.1"
