@@ -3,7 +3,7 @@
 # Authors:: Chef Support Team <support-team@chef.io>
 #
 
-[ -r /etc/opscode/private-chef.sh ] && source /etc/opscode/private-chef.sh
+[ -r /etc/cinc-project/private-chef.sh ] && source /etc/cinc-project/private-chef.sh
 POSTGRESQL_UNIX_USER=${POSTGRESQL_UNIX_USER:=opscode-pgsql}
 
 modified_within_last_x_minutes=180
@@ -14,13 +14,13 @@ if [[ -n $1  ]]; then
     testing=true
 fi
 
-config_name='*chef*.rb'
+config_name='*cinc*.rb'
 
-if [[ ! -e "/opt/opscode/bin/chef-server-ctl" ]]; then
+if [[ ! -e "/opt/cinc-project/bin/cinc-server-ctl" ]]; then
     echo "ERROR: Chef Infra Server may not be installed."
     exit 1
 fi
-config_file_path="/etc/opscode/$config_name"
+config_file_path="/etc/cinc-project/$config_name"
 
 hostname=$(hostname)
 timestamp=$(date +%F_%H.%M.%S-%Z)
@@ -28,7 +28,7 @@ tmpdir="$(mktemp -d)/$hostname/$timestamp"
 #RHEL5 has ip and other tools here
 PATH=$PATH:/bin:/sbin
 
-PATH=/opt/opscode/embedded/bin:$PATH
+PATH=/opt/cinc-project/embedded/bin:$PATH
 
 mkdir -p "$tmpdir"
 # make sure we have the full path in /proc created for the gather-logs bundle
@@ -36,12 +36,12 @@ mkdir -p "$tmpdir/proc/sys/crypto/"
 # create the connectivity dir for proxy / supermarket access checks
 mkdir -p "$tmpdir/connectivity/"
 
-for i in /opt/{chef,opscode}*/version-manifest.txt \
-              /opt/opscode/pc-version.txt \
-              /etc/opscode/$config_name \
-              /etc/{chef,opscode}*/*-running.json \
-              /var/opt/opscode*/etc/*-running.json \
-              /etc/{chef,opscode,opscode-manage}*/*.rb \
+for i in /opt/{cinc,cinc-project}*/version-manifest.txt \
+              /opt/cinc-project/pc-version.txt \
+              /etc/cinc-project/$config_name \
+              /etc/{cinc,cinc-project}*/*-running.json \
+              /var/opt/cinc-project*/etc/*-running.json \
+              /etc/{cinc,cinc-project,opscode-manage}*/*.rb \
               /var/log/syslog \
               /var/log/messages; do
     if [[ -e "$i" ]]; then
@@ -64,9 +64,9 @@ if [[ -f "/var/log/aws-signing-proxy/proxy.log" ]]; then
 fi
 
 # Gather some information from OpenSearch, if it's available
-SEARCHUSR=$(chef-server-ctl show-config | grep 'search_auth_username' |awk '{printf substr($2, 2, length($2)-3)}')
+SEARCHUSR=$(cinc-server-ctl show-config | grep 'search_auth_username' |awk '{printf substr($2, 2, length($2)-3)}')
 [[ -n $SEARCHUSR ]] && OPENSEARCHUSR=$SEARCHUSR || OPENSEARCHUSR="opensearch_user"
-OPENSEARCHPW=$(chef-server-ctl show-secret opscode_erchef search_auth_password)
+OPENSEARCHPW=$(cinc-server-ctl show-secret opscode_erchef search_auth_password)
 gather_opensearch() {
     curl -sS -X GET "http://localhost:$1/_cat/health?v" -u "$OPENSEARCHUSR:$OPENSEARCHPW" > "$tmpdir/opensearch_cat_health.txt"
     curl -sS -X GET "http://localhost:$1/_cluster/health?pretty" -u "$OPENSEARCHUSR:$OPENSEARCHPW" > "$tmpdir/opensearch_cluster_health.txt"
@@ -88,30 +88,30 @@ elif [[ -n $ES_10144 ]]; then
     gather_opensearch 10144
 fi
 
-chef-server-ctl status > "$tmpdir/chef-server-ctl"_status.txt
+cinc-server-ctl status > "$tmpdir/cinc-server-ctl"_status.txt
 
 
-STATSPW=$(chef-server-ctl show-secret opscode_erchef stats_password)
+STATSPW=$(cinc-server-ctl show-secret opscode_erchef stats_password)
 if [ -n "$STATSPW" ]; then
-    curl -k -s -X GET "https://statsuser:$STATSPW@localhost/_stats?format=text" status > "$tmpdir/chef_server_stats_endpoint.txt"
+    curl -k -s -X GET "https://statsuser:$STATSPW@localhost/_stats?format=text" status > "$tmpdir/cinc_server_stats_endpoint.txt"
 else
-    curl -k -s -X GET "https://localhost/_stats?format=text" status > "$tmpdir/chef_server_stats_endpoint.txt"
+    curl -k -s -X GET "https://localhost/_stats?format=text" status > "$tmpdir/cinc_server_stats_endpoint.txt"
 fi
 
 # postgres server may be external - we'll go ahead and try to gather what we can in any case, and just capture errors to the output
 # without showing them to the user
-echo "SELECT CURRENT_TIMESTAMP; SELECT * FROM pg_stat_activity;" | chef-server-ctl psql oc_erchef --as-admin --options -tA > "$tmpdir/pg_stat_activity.txt" 2>&1
-echo "SELECT * FROM sqitch.tags;" |  chef-server-ctl psql oc_erchef --as-admin --options -tA  > "$tmpdir/opscode_chef_sqitch_tags.txt" 2>&1
-echo "SELECT * FROM sqitch.tags;" |  chef-server-ctl psql bifrost --as-admin --options -tA > "$tmpdir/bifrost_sqitch_tags.txt" 2>&1
+echo "SELECT CURRENT_TIMESTAMP; SELECT * FROM pg_stat_activity;" | cinc-server-ctl psql oc_erchef --as-admin --options -tA > "$tmpdir/pg_stat_activity.txt" 2>&1
+echo "SELECT * FROM sqitch.tags;" |  cinc-server-ctl psql oc_erchef --as-admin --options -tA  > "$tmpdir/opscode_cinc_sqitch_tags.txt" 2>&1
+echo "SELECT * FROM sqitch.tags;" |  cinc-server-ctl psql bifrost --as-admin --options -tA > "$tmpdir/bifrost_sqitch_tags.txt" 2>&1
 
 # gather usage information
 mkdir -p "$tmpdir/infra_server_usage"
-echo "SELECT count(DISTINCT org_id) FROM nodes;" |  chef-server-ctl psql oc_erchef --as-admin --options -tA > "$tmpdir/infra_server_usage/consumed_orgs.txt" 2>&1
-echo "SELECT count(DISTINCT environment) FROM nodes WHERE NOT name='_default';" |  chef-server-ctl psql oc_erchef --as-admin --options -tA > "$tmpdir/infra_server_usage/consumed_environments.txt" 2>&1
-echo "SELECT count(DISTINCT policy_group) FROM nodes;" |  chef-server-ctl psql oc_erchef --as-admin --options -tA > "$tmpdir/infra_server_usage/consumed_policy_group.txt" 2>&1
-echo "SELECT count(DISTINCT policy_name) FROM nodes;" |  chef-server-ctl psql oc_erchef --as-admin --options -tA > "$tmpdir/infra_server_usage/consumed_policy_name.txt" 2>&1
-echo "SELECT count(*) FROM nodes;" |  chef-server-ctl psql oc_erchef --as-admin --options -tA > "$tmpdir/infra_server_usage/consumed_nodes.txt" 2>&1
-echo 'SELECT row_to_json(users) FROM (SELECT username, admin FROM "users") AS users;' |  chef-server-ctl psql oc_erchef --as-admin --options -tA > "$tmpdir/infra_server_usage/total_users.json" 2>&1
+echo "SELECT count(DISTINCT org_id) FROM nodes;" |  cinc-server-ctl psql oc_erchef --as-admin --options -tA > "$tmpdir/infra_server_usage/consumed_orgs.txt" 2>&1
+echo "SELECT count(DISTINCT environment) FROM nodes WHERE NOT name='_default';" |  cinc-server-ctl psql oc_erchef --as-admin --options -tA > "$tmpdir/infra_server_usage/consumed_environments.txt" 2>&1
+echo "SELECT count(DISTINCT policy_group) FROM nodes;" |  cinc-server-ctl psql oc_erchef --as-admin --options -tA > "$tmpdir/infra_server_usage/consumed_policy_group.txt" 2>&1
+echo "SELECT count(DISTINCT policy_name) FROM nodes;" |  cinc-server-ctl psql oc_erchef --as-admin --options -tA > "$tmpdir/infra_server_usage/consumed_policy_name.txt" 2>&1
+echo "SELECT count(*) FROM nodes;" |  cinc-server-ctl psql oc_erchef --as-admin --options -tA > "$tmpdir/infra_server_usage/consumed_nodes.txt" 2>&1
+echo 'SELECT row_to_json(users) FROM (SELECT username, admin FROM "users") AS users;' |  cinc-server-ctl psql oc_erchef --as-admin --options -tA > "$tmpdir/infra_server_usage/total_users.json" 2>&1
 
 if [[ -S "/tmp/.s.PGSQL.5432" ]]; then
     su -m $POSTGRESQL_UNIX_USER -c 'ulimit -a' > "$tmpdir/ulimit_a_opscode-pgsql.txt"
@@ -145,9 +145,9 @@ cp "/etc/os-release" "$tmpdir/etc/os-release"
 cp "/etc/system-release" "$tmpdir/etc/system-release" 2>/dev/null
 uname -a > "$tmpdir/uname_a.txt"
 
-if [[ -f "/var/opt/opscode/chef_version_history.txt" ]]; then
-    mkdir -p "$tmpdir/var/opt/opscode"
-    cp "/var/opt/opscode/chef_version_history.txt" "$tmpdir/var/opt/opscode"
+if [[ -f "/var/opt/cinc-project/chef_version_history.txt" ]]; then
+    mkdir -p "$tmpdir/var/opt/cinc-project"
+    cp "/var/opt/cinc-project/chef_version_history.txt" "$tmpdir/var/opt/cinc-project"
 fi
 
 # gather the configured umask
@@ -184,7 +184,7 @@ ping -c 2 `hostname --fqdn` > ping_-c_2_fqdn.txt
 ping -c 2 `hostname` > ping_-c_2_hostname.txt
 
 # gather everything ohai knows
-/opt/opscode/bin/ohai > "$tmpdir/ohai.txt"
+/opt/cinc-project/bin/ohai > "$tmpdir/ohai.txt"
 
 if [[ -e /opt/opscode-manage/bin/opscode-manage-ctl ]]; then
     /opt/opscode-manage/bin/opscode-manage-ctl status > "$tmpdir/opscode-manage-ctl_status.txt"
@@ -196,7 +196,7 @@ if [[ -e /opt/opscode-reporting/bin/opscode-reporting-ctl ]]; then
     found_reporting=true
 fi
 
-su -m opscode -c 'ulimit -a' > "$tmpdir/ulimit_a_opscode.txt"
+su -m cinc -c 'ulimit -a' > "$tmpdir/ulimit_a_cinc.txt"
 
 ip addr show > "$tmpdir/ip_addr_show.txt"
 
@@ -255,27 +255,27 @@ if [[ -z $testing ]]; then
     echo '## Resolved Name + Time' >> "$name_resolution_file"
     echo $tempname >> "$name_resolution_file"
     for interval in `seq 1 5`; do
-        { time /opt/opscode/embedded/bin/ruby -e "require 'resolv'; start=Time.now; p Resolv.getaddress(\"$tempname\")" ; } >> "$name_resolution_file" 2>&1
+        { time /opt/cinc-project/embedded/bin/ruby -e "require 'resolv'; start=Time.now; p Resolv.getaddress(\"$tempname\")" ; } >> "$name_resolution_file" 2>&1
         sleep 2;
     done
 
     echo $backend_fqdn >> "$name_resolution_file"
     for interval in `seq 1 5`; do
-        { time /opt/opscode/embedded/bin/ruby -e "require 'resolv'; start=Time.now; p Resolv.getaddress(\"$backend_fqdn\")" ; } >> "$name_resolution_file" 2>&1
+        { time /opt/cinc-project/embedded/bin/ruby -e "require 'resolv'; start=Time.now; p Resolv.getaddress(\"$backend_fqdn\")" ; } >> "$name_resolution_file" 2>&1
         sleep 2;
     done
 fi
 
 # gather important file permissions
 for fileperms in \
-    /var/opt/opscode* \
-        /var/log/opscode*; do
+    /var/opt/cinc-project* \
+        /var/log/cinc-project*; do
     ls -altuhR "$fileperms" >> "$tmpdir/perms.txt"
 done
 
 # gather the db migration level
 migration_level_file="$tmpdir/migration-level.txt"
-migration_level_file_location="/var/opt/opscode/upgrades/migration-level"
+migration_level_file_location="/var/opt/cinc-project/upgrades/migration-level"
 if [[ -f $migration_level_file_location  ]]; then
     cat $migration_level_file_location >> "$migration_level_file"
 else
@@ -284,7 +284,7 @@ fi
 
 #What packages do we have installed on our supported platforms?
 installed_packages_file="$tmpdir/installed-packages.txt"
-installed_packages_grep="grep -i -E (chef|opscode)"
+installed_packages_grep="grep -i -E (cinc|cinc-project)"
 if [[ $known_platform == 'rhel' || $known_platform == 'centos' || $known_platform == 'amazon' || $known_platform == 'sles' ]]; then
     rpm -qa | $installed_packages_grep >> "$installed_packages_file"
 elif [[ $known_platform == 'ubuntu' ]]; then
