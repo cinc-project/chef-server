@@ -15,7 +15,7 @@ gem "toml" # for habitat-land
 
 # Cinc wordmark fixes
 gem "chef_backup", source: "https://packagecloud.io/cinc-project/stable"
-gem "mixlib-install", "= 3.12.20", source: "https://packagecloud.io/cinc-project/stable"
+gem "mixlib-install", "= 3.12.24", source: "https://packagecloud.io/cinc-project/stable"
 
 # Version lock these to match Gemfile.lock when doing a stable release
 if ENV['CHANNEL'] =~ /stable|unstable|current/
