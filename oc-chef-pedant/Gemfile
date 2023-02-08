@@ -36,6 +36,7 @@ if ENV['CHANNEL'] =~ /stable|unstable|current/
   gem 'train-winrm', '= 0.2.13'
   gem 'unicode-display_width', '= 2.1.0'
   gem 'vault', '= 0.16.0'
+  gem 'webrick', '= 1.7.0'
   gem 'wmi-lite', '= 1.0.5'
 end
 
