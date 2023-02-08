@@ -30,8 +30,9 @@ if ENV['CHANNEL'] =~ /stable|unstable|current/
   gem "inspec-core", "= 4.24.32", source: "https://packagecloud.io/cinc-project/stable"
   gem "logging", "= 2.3.1"
   gem "ohai", "= 17.9.0"
-  gem "rack", "= 2.2.4"
+  gem "rack", "= 2.2.6.2"
   gem "rspec", "= 3.12.0"
+  gem "webrick", "= 1.7.0"
 else
   gem "inspec-core", source: "https://packagecloud.io/cinc-project/stable"
 end
