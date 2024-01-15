@@ -5,7 +5,7 @@ gem "pg", "~> 0.16.0"
 gem "veil", "0.3.11"
 # Version lock these to match Gemfile.lock when doing a stable release
 if ENV['CHANNEL'] =~ /stable|unstable|current/
-  gem "chef-utils", "= 16.17.51", source: "https://packagecloud.io/cinc-project/stable"
+  gem "chef-utils", "= 16.17.51", source: "https://rubygems.cinc.sh"
 else
-  gem "chef-utils", "~> 16.17", source: "https://packagecloud.io/cinc-project/stable"
+  gem "chef-utils", "~> 16.17", source: "https://rubygems.cinc.sh"
 end
