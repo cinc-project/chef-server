@@ -33,7 +33,7 @@ build do
     gem [
       "install knife",
       v_opts,
-      "--source https://packagecloud.io/cinc-project/stable",
+      "--source https://rubygems.cinc.sh",
       "--no-document",
     ].compact.join(" "), env: env
   
