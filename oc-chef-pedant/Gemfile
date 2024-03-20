@@ -39,6 +39,7 @@ if ENV['CHANNEL'] =~ /stable|unstable|current/
   gem 'thor', '= 1.2.1'
   gem 'train-core', '= 3.8.9'
   gem 'train-winrm', '= 0.2.13'
+  gem 'tty-screen', '= 0.8.1'
   gem 'unicode-display_width', '= 2.1.0'
   gem 'vault', '= 0.16.0'
   gem 'webrick', '= 1.7.0'
