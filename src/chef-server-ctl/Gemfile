@@ -15,7 +15,7 @@ gem "toml" # for habitat-land
 
 # Cinc wordmark fixes
 gem "chef_backup", source: "https://rubygems.cinc.sh"
-gem "mixlib-install", "= 3.12.28", source: "https://rubygems.cinc.sh"
+gem "mixlib-install", "= 3.12.30", source: "https://rubygems.cinc.sh"
 
 # Version lock these to match Gemfile.lock when doing a stable release
 if ENV['CHANNEL'] =~ /stable|unstable|current/
@@ -23,6 +23,7 @@ if ENV['CHANNEL'] =~ /stable|unstable|current/
   gem "aws-sdk-core", "= 3.165.1"
   gem "aws-sdk-s3", "= 1.117.0"
   gem "aws-sdk-secretsmanager", "= 1.67.0"
+  gem "bcrypt_pbkdf", "= 1.1.0"
   gem "chef_fixie", "= 1.0.8"
   gem "chef-vault", "= 4.1.10"
   gem "erubi", "= 1.11.0"
@@ -34,6 +35,7 @@ if ENV['CHANNEL'] =~ /stable|unstable|current/
   gem "ohai", "= 17.9.0"
   gem "rack", "= 2.2.6.4"
   gem "rspec", "= 3.12.0"
+  gem "rubyntlm", "= 0.6.3"
   gem "vault", "= 0.17.0"
   gem "webrick", "= 1.7.0"
 else
