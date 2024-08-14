@@ -96,6 +96,6 @@ add_command_under_category "psql", "Database", "Launches an interactive PostgreS
   ENV["PGPASSWORD"] = db_password
   ENV["PAGER"] = "less"
   ENV["LESS"] = "-iMSx4 -FX"
-  cmd = "/opt/opscode/embedded/bin/psql --host #{db_host} --username #{db_username} --port #{db_port} --dbname #{db_name}#{psql_options}"
+  cmd = "/opt/cinc-project/embedded/bin/psql --host #{db_host} --username #{db_username} --port #{db_port} --dbname #{db_name}#{psql_options}"
   exec cmd
 end
