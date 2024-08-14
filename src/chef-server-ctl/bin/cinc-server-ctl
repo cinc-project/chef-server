@@ -1,4 +1,4 @@
-#!/opt/opscode/embedded/bin/ruby
+#!/opt/cinc-project/embedded/bin/ruby
 
 gem "omnibus-ctl"
 require "omnibus-ctl"
