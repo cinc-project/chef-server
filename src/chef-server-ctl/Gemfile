@@ -38,6 +38,7 @@ if ENV['CHANNEL'] =~ /stable|unstable|current/
   gem "rubyntlm", "= 0.6.3"
   gem "vault", "= 0.17.0"
   gem "webrick", "= 1.7.0"
+  gem "winrm", "= 2.3.6"
 else
   gem "inspec-core", source: "https://rubygems.cinc.sh"
 end
