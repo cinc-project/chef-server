@@ -402,6 +402,13 @@ default['private_chef']['opscode-erchef']['stats_auth_enable'] = true
 default['private_chef']['opscode-erchef']['stats_user'] = 'statsuser'
 default['private_chef']['opscode-erchef']['stats_password_file'] = "#{var_base}/nginx/stats_htpasswd"
 
+# Telemetry
+# This will enable/disable data collection to Progress.
+# https://docs.chef.io/server/license_usage/#collected-data
+#
+# Opt-in by default
+default['private_chef']['opscode-erchef']['telemetry_enabled'] = true
+
 ###
 # Legacy path (required for cookbok migration)
 ###
