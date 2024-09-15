@@ -151,7 +151,7 @@ send_data(State) ->
         case chef_telemetry:is_enabled() of
             true ->
                 State1 = init_req(State),
-                NodeName = to_binary("NODE:" ++ binary:bin_to_list(envy:get(oc_chef_wm, actions_fqdn, <<"">>, binary))),
+                NodeName = get_fqdn(),
                 case check_send(NodeName) of
                     true ->
                         [{_Server, ServerVersion, _, _}] = release_handler:which_releases(permanent),
@@ -230,6 +230,14 @@ determine_license_id(_State)->
 
 get_company_name(_State) ->
     CompanyName =
+        case envy:get(chef_telemetry, customer_name, null, string)  of
+            null -> calculate_company_name();  % Use the original logic to calculate company name
+            Name -> list_to_binary(Name)  % Use the value from envy if it exists
+        end,
+    CompanyName.
+
+calculate_company_name() ->
+    % Original logic to calculate company name from email addresses
     case get_license_company_name() of
         CN when CN =:= undefined; CN=:= <<"">>; CN =:= "" ->
             case sqerl:adhoc_select([<<"email">>], <<"users">>, all) of
@@ -255,8 +263,7 @@ get_company_name(_State) ->
                         throw(Error)
             end;
         CN -> CN
-    end,
-    CompanyName.
+    end.
 
 get_most_occuring(List) ->
     FirstElement = lists:nth(1, List),
@@ -376,6 +383,15 @@ check_send(Hostname) ->
         Error ->
             Error
     end.
+
+get_fqdn() ->
+    NodeName = envy:get(chef_telemetry, fqdn, null, string),
+    case NodeName of
+        null ->
+            to_binary("NODE:" ++ binary:bin_to_list(envy:get(oc_chef_wm, actions_fqdn, <<"">>, binary)));
+        _ ->
+            to_binary("NODE:" ++ binary:bin_to_list(NodeName))
+	end.
 
 mask(FQDNs) ->
     Join = fun(Elements, Separator) ->
