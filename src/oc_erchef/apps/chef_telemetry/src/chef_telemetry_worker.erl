@@ -201,31 +201,32 @@ solr_search(Query) ->
 
 get_company_name(State) ->
     CompanyName =
-    case sqerl:adhoc_select([<<"email">>], <<"users">>, all) of
-        {ok, Ids1} ->
-            Ids = [Id || [{_, Id}] <- Ids1],
-            Fun =
-                fun(Email) ->
-                    case re:run(Email, "^[^@]*@\([^.]*\)\..*$") of
-                        {match, [_, {Pos, Len} | _]} ->
-                            {true, binary:part(Email, Pos, Len)};
-                        _ ->
-                            false
-                    end
-                end,
-            CompanyNames = lists:filtermap(Fun, Ids),
-            case length(CompanyNames) == 0 of
-                true ->
-                    throw("no valid Email Ids.");
-                _ ->
-                    get_most_occuring(CompanyNames)
-            end;
-        Error ->
-            throw(Error)
-    end,
+        case envy:get(chef_telemetry, customer_name, null, string)  of
+            null -> calculate_company_name();  % Use the original logic to calculate company name
+            Name -> list_to_binary(Name)  % Use the value from envy if it exists
+        end,
     CurrentScan = State#state.current_scan,
     State#state{
         current_scan = CurrentScan#current_scan{company_name = CompanyName}}.
+
+calculate_company_name() ->
+    % Original logic to calculate company name from email addresses
+    case sqerl:adhoc_select([<<"email">>], <<"users">>, all) of
+        {ok, Ids1} ->
+            Ids = [Id || [{_, Id}] <- Ids1],
+            Fun = fun(Email) ->
+                      case re:run(Email, "^[^@]*@\([^.]*\)\..*$") of
+                          {match, [_, {Pos, Len} | _]} -> {true, binary:part(Email, Pos, Len)};
+                          _ -> false
+                      end
+                  end,
+            CompanyNames = lists:filtermap(Fun, Ids),
+            case CompanyNames of
+                [] -> throw("no valid Email Ids.");
+                _ -> get_most_occuring(CompanyNames)
+            end;
+        Error -> throw(Error)
+    end.
 
 get_most_occuring(List) ->
     FirstElement = lists:nth(1, List),
@@ -347,8 +348,14 @@ check_send(Hostname) ->
     end.
 
 get_fqdn() ->
-    HostName = binary:bin_to_list(envy:get(oc_chef_wm, actions_fqdn, <<"">>, binary)),
-    to_binary("FQDN:" ++ HostName).
+    HostName = envy:get(chef_telemetry, fqdn, null, string),
+    case HostName of
+        null ->
+            FqdnDefault = binary:bin_to_list(envy:get(oc_chef_wm, actions_fqdn, <<"">>, binary)),
+            "FQDN:" ++ binary_to_list(FqdnDefault);
+        _ ->
+            "FQDN:" ++ binary_to_list(HostName)
+	end.
 
 mask(FQDNs) ->
     Join = fun(Elements, Separator) ->
