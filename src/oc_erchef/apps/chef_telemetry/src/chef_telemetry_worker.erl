@@ -54,11 +54,7 @@
 
 -define(DEFAULT_DAYS, 30).
 
--ifdef(TEST).
--define(DEFAULT_REPORTING_URL, "http://127.0.0.1:9001/esi/payload:test").
--else.
--define(DEFAULT_REPORTING_URL, "https://services.chef.io/usage/v1/payload").
--endif.
+-define(DEFAULT_REPORTING_URL, "http://127.0.0.1:9001/").
 
 -define(DEFAULT_REPORTING_TIME, {4, 00}).
 
@@ -82,13 +78,22 @@ init(_Config) ->
         reporting_url = ?DEFAULT_REPORTING_URL,
         running_file = ConfigFile,
         ctl_command = CtlLocation},
+
+    %% Immediately call send_data on startup
+    error_logger:info_msg("Starting immediate send_data gen_server:cast: State: ~p", [State]),
+    gen_server:cast(self(), send_data),
+
+    %% Set timer for the next iteration (every 1 minute)
+    error_logger:info_msg("Starting init_timer gen_server:cast: State: ~p", [State]),
     gen_server:cast(self(), init_timer),
+
     {ok, State}.
 
 handle_call(_Message, _From, State) ->
     {noreply, State}.
 
 handle_cast(send_data, State) ->
+    error_logger:info_msg("Starting handle_cast(send_data): State: ~p", [State]),
     State2 =
         try send_data(State) of
             State1 -> State1
@@ -150,34 +155,49 @@ send_data(State) ->
     State6 =
         case chef_telemetry:is_enabled() of
             true ->
+                error_logger:info_msg("Starting send_data since enabled: State: ~p", [State]),
                 State1 = init_req(State),
+                error_logger:info_msg("init_req: State1: ~p", [State1]),
                 NodeName = get_fqdn(),
+                error_logger:info_msg("get_fqdn: Hostname: ~p", [NodeName]),
                 case check_send(NodeName) of
                     true ->
+                        error_logger:info_msg("Starting check_send true"),
                         [{_Server, ServerVersion, _, _}] = release_handler:which_releases(permanent),
                         Funs = [fun get_total_nodes/1, fun get_active_nodes/1, fun get_company_name/1, fun get_api_fqdn/1, fun determine_license_id/1],
                         Pid = self(),
                         Res = [ erlang:spawn_monitor(runner(Pid, State1, Fun)) || Fun <- Funs ],
                         Current_scan = gather_res(Res, State1#state.current_scan, length(Funs)),
                         Req = generate_request(ServerVersion, State1#state{current_scan = Current_scan}),
+                        error_logger:info_msg("check_send true: State1: ~p", [State1]),
                         send_req(Req, State1),
+                        error_logger:info_msg("check_send true: Req: ~p", [Req]),
                         State1;
                      _   ->
+                        error_logger:info_msg("check_send false: State1: ~p", [State1]),
                         State1
-                end;
+                end,
+                error_logger:info_msg("Ending check_send true");
             _ ->
+                error_logger:info_msg("send_data false: State: ~p", [State]),
                 State
         end,
     State6.
 
 get_api_fqdn(_State) ->
+    error_logger:info_msg("Starting get_api_fqdn"),
     sqerl:execute(<<"delete from telemetry where property like 'NODE:%' and event_timestamp < (current_timestamp - interval '86700')">>),
+    error_logger:info_msg("Delete get_api_fqdn sql done"),
     case sqerl:execute(<<"select trim(property) as property from telemetry where property like 'NODE:%'">>) of
         {ok, Rows} when is_list(Rows) ->
+            error_logger:info_msg("get_api_fqdn: Rows: ~p", [Rows]),
             FQDNs = [binary:part(FQDN, 5, size(FQDN) -5) || [{<<"property">>, FQDN}] <- Rows],
+            error_logger:info_msg("get_api_fqdn: FQDNs: ~p", [FQDNs]),
             FQDNs1 = mask(FQDNs),
+            error_logger:info_msg("get_api_fqdn: FQDNs1: ~p", [FQDNs1]),
             FQDNs1;
         _ ->
+            error_logger:info_msg("get_api_fqdn false: State: ~p", [_State]),
             []
     end.
 
@@ -369,18 +389,21 @@ epoch_to_string(Epoch) ->
     calendar:system_time_to_rfc3339(Epoch, [{offset, "Z"}]).
 
 send_req(Req, State) ->
+    error_logger:info_msg("Starting send_req: State ~p", [State]),
     case ibrowse:send_req(State#state.reporting_url, [{"Content-Type", "application/json"}], post, Req, [], 5000) of
         {ok, _Status, _ResponseHeaders, _ResponseBody} -> ok;
         Error                                          -> {failed_sending_request, Error}
     end.
 
 check_send(Hostname) ->
+    error_logger:info_msg("Starting check_send: Hostname ~p", [Hostname]),
     case sqerl:execute(<<"select telemetry_check_send('", Hostname/binary, "')">>) of
         {ok,[[{_, true}]]} ->
             true;
         {ok,[[{_, false}]]}  ->
             false;
         Error ->
+            error_logger:info_msg("check_send error: Error ~p", [Error]),
             Error
     end.
 
@@ -388,12 +411,15 @@ get_fqdn() ->
     NodeName = envy:get(chef_telemetry, fqdn, null, string),
     case NodeName of
         null ->
+            error_logger:info_msg("'fqdn' not found in envy, using default FQDN."),
             to_binary("NODE:" ++ binary:bin_to_list(envy:get(oc_chef_wm, actions_fqdn, <<"">>, binary)));
         _ ->
+            error_logger:info_msg("Found 'fqdn' in envy: ~p", [NodeName]),
             to_binary("NODE:" ++ binary:bin_to_list(NodeName))
 	end.
 
 mask(FQDNs) ->
+    error_logger:info_msg("Starting mask FQDNS: ~p", [FQDNs]),
     Join = fun(Elements, Separator) ->
         [H | T] = Elements,
         lists:foldl(fun (Value, Acc) -> <<Acc/binary, Separator/binary, Value/binary>> end, H, T)
@@ -403,31 +429,42 @@ mask(FQDNs) ->
                     <<"(?:(.*?):\/\/?)?\/?(?:[^\/\.]+\.)*?([^\/\.]+)\.?([^\/:]*)(?::([^?\/]*)?)?(.*)?">>,
                     [{capture, all_but_first, binary}]) of
             {match, Parts} ->
+                error_logger:info_msg("mask matched: Parts: ~p", [Parts]),
                 [Protocall, SubDomain, Domain, Rest1, Rest2] = Parts,
                 FQDN1 = <<SubDomain/binary, ".", Domain/binary>>,
                 case re:run(FQDN1, <<"^[0-9a-fA-F\.:]*$">>) of
                     {match, _} ->
+                        error_logger:info_msg("mask matched FQDN1: FQDN1: ~p", [FQDN1]),
                         Hash = crypto:hash(md5, FQDN1),
                         Domain2 = <<"">>;
                     _ ->
+                        error_logger:info_msg("mask not matched FQDN1: FQDN1: ~p", [FQDN1]),
                         FQDN_parts = binary:split(FQDN1, <<"\.">>, [global]),
+                        error_logger:info_msg("mask not matched FQDN1: FQDN_parts: ~p", [FQDN_parts]),
                         case size(lists:last(FQDN_parts)) =:= 2 of
                             true ->
                                 {SubDomain1, Domain1} = lists:split(erlang:length(FQDN_parts) - 3, FQDN_parts),
+                                error_logger:info_msg("mask size of FQDN_parts 2 found: SubDomain1: ~p Domain1: ~p", [SubDomain1,Domain1]),
                                 SubDomain2 = Join(SubDomain1, <<".">>),
                                 Domain2 = Join(Domain1, <<".">>);
                             _    ->
 
+                                error_logger:info_msg("mask size of FQDN_parts 2 not found"),
                                 {SubDomain1, Domain1} = lists:split(erlang:length(FQDN_parts) - 2, FQDN_parts),
+                                error_logger:info_msg("lists:split SubDomain1: ~p Domain1: ~p", [SubDomain1,Domain1]),
                                 SubDomain2 = Join(SubDomain1, <<".">>),
-                                Domain2 = Join(Domain1, <<".">>)
+                                Domain2 = Join(Domain1, <<".">>),
+                                error_logger:info_msg("lists:split SubDomain2: ~p Domain2: ~p", [SubDomain2,Domain2])
                         end,
-                        Hash = crypto:hash(md5, SubDomain2)
+                        Hash = crypto:hash(md5, SubDomain2),
+                        error_logger:info_msg("crypto:hash Hash: ~p", [Hash])
                 end,
-
                 Hash1 = base64:encode(Hash),
+                error_logger:info_msg("Hash1: ~p", [Hash1]),
                 Len = binary:longest_common_suffix([Hash1, <<"===">>]),
+                error_logger:info_msg("Len: ~p", [Len]),
                 Hash2 = binary:part(Hash1, {0, size(Hash1) - Len}),
+                error_logger:info_msg("Hash2: ~p", [Hash2]),
                 Res1 =
                     case Protocall /= <<"">> of
                         true ->
@@ -435,6 +472,7 @@ mask(FQDNs) ->
                         false ->
                             <<Hash2/binary>>
                     end,
+                error_logger:info_msg("Res1: ~p", [Res1]),
                 Res2 =
                 case Domain2 =:= <<"">> of
                     true ->
@@ -442,6 +480,7 @@ mask(FQDNs) ->
                     false ->
                         <<Res1/binary, ".", Domain2/binary>>
                 end,
+                error_logger:info_msg("Res2: ~p", [Res2]),
                 Res3 =
                     case Rest1 /= <<"">> of
                         true ->
@@ -449,11 +488,14 @@ mask(FQDNs) ->
                         _ ->
                             <<Res2/binary, Rest2/binary>>
                     end,
+                error_logger:info_msg("Res3: ~p", [Res3]),
                 Res3;
             _ ->
+                error_logger:info_msg("mask not matched: FQDN: ~p", [FQDN]),
                 <<"">>
         end
     end,
+    error_logger:info_msg("mask lists:map: Fun: ~p FQDNs: ~p", [Fun, FQDNs]),
     lists:map(Fun, FQDNs).
 
 runner(Parent, State, Fun) ->

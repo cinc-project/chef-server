@@ -18,29 +18,21 @@ DECLARE
   host_timestamp telemetry.property%TYPE;
   last_send_timestamp telemetry.event_timestamp%TYPE;
 BEGIN
+  -- Delete any existing entry for the given hostname
   DELETE FROM telemetry
   WHERE property = hostname;
 
+  -- Insert a new entry for the given hostname
   INSERT INTO telemetry(property, value_string, event_timestamp)
   VALUES (hostname, '', current_timestamp);
 
-  SELECT event_timestamp
-  FROM telemetry
-  WHERE property = 'last_send'
-  INTO last_send_timestamp;
-  IF NOT FOUND THEN
-    INSERT INTO telemetry(property, value_string, event_timestamp)
-    VALUES ('last_send', hostname, current_timestamp);
-    RETURN true;
-  END IF;
-  IF last_send_timestamp < current_timestamp - interval '23 hours 54 minutes' THEN
-    DELETE FROM telemetry
-    WHERE property = 'last_send';
-    INSERT INTO telemetry(property, value_string, event_timestamp)
-    VALUES ('last_send', hostname, current_timestamp);
-    RETURN true;
-  END IF;
-  RETURN false;
+  -- Always update the 'last_send' entry
+  DELETE FROM telemetry
+  WHERE property = 'last_send';
+  INSERT INTO telemetry(property, value_string, event_timestamp)
+  VALUES ('last_send', hostname, current_timestamp);
+
+  RETURN true;
 END;
 $$;
 
