@@ -326,6 +326,12 @@
     {chef_telemetry, [
             {running_filepath, "<%= node['private_chef']['running_filepath'] %>"},
             {ctl_command, "<%= node['private_chef']['ctl_command'] %>"},
+            <% if node['private_chef']['opscode-erchef']['telemetry_customer_name'] -%>
+            {customer_name, "<%= node['private_chef']['opscode-erchef']['telemetry_customer_name'] %>" },
+            <% end -%>
+            <% if node['private_chef']['opscode-erchef']['telemetry_fqdn'] -%>
+            {fqdn, "<%= node['private_chef']['opscode-erchef']['telemetry_fqdn'] %>" },
+            <% end -%>
             {is_enabled, <%= node['private_chef']['opscode-erchef']['telemetry_enabled'] %>}
         ]
     }
