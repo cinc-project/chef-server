@@ -408,6 +408,8 @@ default['private_chef']['opscode-erchef']['stats_password_file'] = "#{var_base}/
 #
 # Opt-in by default
 default['private_chef']['opscode-erchef']['telemetry_enabled'] = true
+default['private_chef']['opscode-erchef']['telemetry_customer_name'] = nil
+default['private_chef']['opscode-erchef']['telemetry_fqdn'] = nil
 
 ###
 # Legacy path (required for cookbok migration)
