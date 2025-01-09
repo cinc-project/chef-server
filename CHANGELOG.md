@@ -7,8 +7,8 @@
 - Updated opensearch version to 1.3.20 . [#3972](https://github.com/chef/chef-server/pull/3972) ([sreepuramsudheer](https://github.com/sreepuramsudheer))
 <!-- latest_release -->
 
-<!-- release_rollup since=15.10.21 -->
-### Changes since 15.10.21 release
+<!-- release_rollup since=15.10.27 -->
+### Changes since 15.10.27 release
 
 #### Merged Pull Requests
 - Updated opensearch version to 1.3.20 . [#3972](https://github.com/chef/chef-server/pull/3972) ([sreepuramsudheer](https://github.com/sreepuramsudheer)) <!-- 15.10.27 -->
@@ -20,6 +20,17 @@
 <!-- release_rollup -->
 
 <!-- latest_stable_release -->
+## [15.10.27](https://github.com/chef/chef-server/tree/15.10.27) (2025-01-09)
+
+#### Merged Pull Requests
+- Space changes to trigger version bump. [#3965](https://github.com/chef/chef-server/pull/3965) ([sreepuramsudheer](https://github.com/sreepuramsudheer))
+- Pinning meck to 0.9.2. [#3966](https://github.com/chef/chef-server/pull/3966) ([sreepuramsudheer](https://github.com/sreepuramsudheer))
+- postgresql 13.14 -&gt; 13.18 (CVE-2024-7348) [#3952](https://github.com/chef/chef-server/pull/3952) ([lbakerchef](https://github.com/lbakerchef))
+- Knife search issue: when search entries are more than 10K [#3951](https://github.com/chef/chef-server/pull/3951) ([talktovikas](https://github.com/talktovikas))
+- update license_scout version [#3971](https://github.com/chef/chef-server/pull/3971) ([muthuja](https://github.com/muthuja))
+- Updated opensearch version to 1.3.20 . [#3972](https://github.com/chef/chef-server/pull/3972) ([sreepuramsudheer](https://github.com/sreepuramsudheer))
+<!-- latest_stable_release -->
+
 ## [15.10.21](https://github.com/chef/chef-server/tree/15.10.21) (2024-12-04)
 
 #### Merged Pull Requests
@@ -32,7 +43,6 @@
 - License Enforcement Application [#3929](https://github.com/chef/chef-server/pull/3929) ([jashaik](https://github.com/jashaik))
 - Telemetry automate changes. [#3946](https://github.com/chef/chef-server/pull/3946) ([sreepuramsudheer](https://github.com/sreepuramsudheer))
 - Telemetry code refactor. [#3948](https://github.com/chef/chef-server/pull/3948) ([sreepuramsudheer](https://github.com/sreepuramsudheer))
-<!-- latest_stable_release -->
 
 ## [15.10.12](https://github.com/chef/chef-server/tree/15.10.12) (2024-08-29)
 
