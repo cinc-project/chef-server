@@ -376,13 +376,14 @@ check_send(Hostname) ->
     end.
 
 get_fqdn() ->
-    NodeName = envy:get(chef_telemetry, fqdn, null, string),
-    case NodeName of
-        null ->
-            to_binary("NODE:" ++ binary:bin_to_list(envy:get(oc_chef_wm, actions_fqdn, <<"">>, binary)));
-        _ ->
-            to_binary("NODE:" ++ binary:bin_to_list(NodeName))
-	end.
+    NodeName =
+        case envy:get(chef_telemetry, fqdn, null, string) of
+            null ->
+                to_binary("NODE:" ++ binary:bin_to_list(envy:get(oc_chef_wm, actions_fqdn, <<"">>, binary)));
+            _ ->
+                to_binary("NODE:" ++ binary:bin_to_list(NodeName))
+        end.
+    NodeName.
 
 mask(FQDNs) ->
     Join = fun(Elements, Separator) ->
