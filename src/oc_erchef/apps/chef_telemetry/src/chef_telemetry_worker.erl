@@ -139,8 +139,9 @@ send_data(State) ->
         case chef_telemetry:is_enabled() of
             true ->
                 State1 = init_req(State),
+                error_logger:info_msg("send_data / chef_telemetry:is_enabled true: State1: ~p", [State1]),
                 NodeName = get_fqdn(),
-                error_logger:info_msg("get_fqdn(): NodeName: ~p", [NodeName]),
+                error_logger:info_msg("send_data / get_fqdn() NodeName: ~p", [NodeName]),
                 case check_send(NodeName) of
                     true ->
                         [{_Server, ServerVersion, _, _}] = release_handler:which_releases(permanent),
@@ -155,6 +156,7 @@ send_data(State) ->
                         State1
                 end;
             _ ->
+                error_logger:info_msg("send_data / chef_telemetry:is_enabled false: State: ~p", [State]),
                 State
         end,
     State6.
