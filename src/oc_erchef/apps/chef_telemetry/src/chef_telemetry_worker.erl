@@ -140,6 +140,7 @@ send_data(State) ->
             true ->
                 State1 = init_req(State),
                 NodeName = get_fqdn(),
+                error_logger:info_msg("get_fqdn(): NodeName: ~p", [NodeName]),
                 case check_send(NodeName) of
                     true ->
                         [{_Server, ServerVersion, _, _}] = release_handler:which_releases(permanent),
@@ -159,7 +160,7 @@ send_data(State) ->
     State6.
 
 get_api_fqdn(_State) ->
-    sqerl:execute(<<"delete from telemetry where property like 'NODE:%' and event_timestamp < (current_timestamp - interval '86700')">>),
+    sqerl:execute(<<"delete from telemetry where property like 'NODE:%' and event_timestamp < (current_timestamp - interval '1')">>),
     case sqerl:execute(<<"select trim(property) as property from telemetry where property like 'NODE:%'">>) of
         {ok, Rows} when is_list(Rows) ->
             FQDNs = [binary:part(FQDN, 5, size(FQDN) -5) || [{<<"property">>, FQDN}] <- Rows],
