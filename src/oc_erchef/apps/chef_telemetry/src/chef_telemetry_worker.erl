@@ -382,7 +382,7 @@ get_fqdn() ->
                 to_binary("NODE:" ++ binary:bin_to_list(envy:get(oc_chef_wm, actions_fqdn, <<"">>, binary)));
             Name ->
                 to_binary("NODE:" ++ binary:bin_to_list(Name))
-        end.
+        end,
     NodeName.
 
 mask(FQDNs) ->
