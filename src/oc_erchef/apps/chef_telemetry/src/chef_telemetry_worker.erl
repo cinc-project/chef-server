@@ -385,13 +385,23 @@ check_send(Hostname) ->
     end.
 
 get_fqdn() ->
-    NodeName = envy:get(chef_telemetry, fqdn, null, string),
+    Fqdn =
+        try
+            envy:get(chef_telemetry, fqdn, <<"">>, string)
+        catch
+            _:_ ->
+                <<"">>
+        end,
+    NodeName = case Fqdn of
+        <<"">> -> null;
+        _ -> binary:bin_to_list(erlang:list_to_binary(Fqdn))
+    end,
     case NodeName of
         null ->
             to_binary("NODE:" ++ binary:bin_to_list(envy:get(oc_chef_wm, actions_fqdn, <<"">>, binary)));
         _ ->
-            to_binary("NODE:" ++ binary:bin_to_list(NodeName))
-	end.
+            to_binary("NODE:" ++ NodeName)
+        end.
 
 mask(FQDNs) ->
     Join = fun(Elements, Separator) ->
