@@ -33,7 +33,7 @@ BEGIN
     VALUES ('last_send', hostname, current_timestamp);
     RETURN true;
   END IF;
-  IF last_send_timestamp < current_timestamp - interval '23 hours 54 minutes' THEN
+  IF last_send_timestamp < current_timestamp - interval '1 second' THEN
     DELETE FROM telemetry
     WHERE property = 'last_send';
     INSERT INTO telemetry(property, value_string, event_timestamp)
