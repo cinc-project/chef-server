@@ -106,6 +106,7 @@ handle_cast(send_data, State) ->
             _:_ ->
                 State
         end,
+    error_logger:info_msg("Starting handle_cast(send_data): State2: ~p", [State2]),
     gen_server:cast(self(), init_timer),
     {noreply, State2};
 
