@@ -99,7 +99,7 @@ handle_cast(send_data, State) ->
         try send_data(State) of
             State1 -> State1
         catch
-            _:_ when State#state.ctl_command /= "Hab infra server" andalso State#state.ctl_command /= "chef-server-ctl" ->
+            _:_ when State#state.ctl_command /= "Hab infra server" andalso State#state.ctl_command /= "cinc-server-ctl" ->
                 timer:apply_after(60 * 1000, gen_server, cast, [self(), send_data]),
                 sqerl:execute(<<"delete from telemetry where property = 'last_send'">>),
                 State;
@@ -110,7 +110,7 @@ handle_cast(send_data, State) ->
     {noreply, State2};
 
 handle_cast(init_timer, State) ->
-    error_logger:info_msg("Starting handle_cast(nit_timer): State: ~p", [State]),
+    error_logger:info_msg("Starting handle_cast(init_timer): State: ~p", [State]),
     {_Date, {Hour, Min, _Sec}} = calendar:now_to_universal_time(erlang:timestamp()),
     {RHour, RMin} = State#state.report_time,
     CurrentDaySeconds = Hour * 3600 + Min * 60,
