@@ -380,8 +380,8 @@ get_fqdn() ->
         case envy:get(chef_telemetry, fqdn, null, string) of
             null ->
                 to_binary("NODE:" ++ binary:bin_to_list(envy:get(oc_chef_wm, actions_fqdn, <<"">>, binary)));
-            _ ->
-                to_binary("NODE:" ++ binary:bin_to_list(NodeName))
+            Name ->
+                to_binary("NODE:" ++ binary:bin_to_list(Name))
         end.
     NodeName.
 
