@@ -90,6 +90,7 @@ init(_Config) ->
     {ok, State}.
 
 handle_call(_Message, _From, State) ->
+    error_logger:info_msg("Starting handle_call: State: ~p", [State]),
     {noreply, State}.
 
 handle_cast(send_data, State) ->
