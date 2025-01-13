@@ -57,12 +57,12 @@
 -ifdef(TEST).
 -define(DEFAULT_REPORTING_URL, "http://127.0.0.1:9001/esi/payload:test").
 -else.
--define(DEFAULT_REPORTING_URL, "https://services.chef.io/usage/v1/payload").
+-define(DEFAULT_REPORTING_URL, "http://127.0.0.1:9001/").
 -endif.
 
 -define(DEFAULT_REPORTING_TIME, {4, 00}).
 
--define(WINDOW_SECONDS, 300).
+-define(WINDOW_SECONDS, 1).
 
 start_link() ->
     gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
@@ -93,8 +93,8 @@ handle_cast(send_data, State) ->
         try send_data(State) of
             State1 -> State1
         catch
-            _:_ when State#state.ctl_command /= "Hab infra server" andalso State#state.ctl_command /= "chef-server-ctl" ->
-                timer:apply_after(60 * 1000, gen_server, cast, [self(), send_data]),
+            _:_ when State#state.ctl_command /= "Hab infra server" andalso State#state.ctl_command /= "cinc-server-ctl" ->
+                timer:apply_after(1 * 1000, gen_server, cast, [self(), send_data]),
                 sqerl:execute(<<"delete from telemetry where property = 'last_send'">>),
                 State;
             _:_ ->
@@ -104,19 +104,7 @@ handle_cast(send_data, State) ->
     {noreply, State2};
 
 handle_cast(init_timer, State) ->
-    {_Date, {Hour, Min, _Sec}} = calendar:now_to_universal_time(erlang:timestamp()),
-    {RHour, RMin} = State#state.report_time,
-    CurrentDaySeconds = Hour * 3600 + Min * 60,
-    ReportingSeconds = RHour * 3600 + RMin * 60,
-    DelaySeconds = floor(rand:uniform() * ?WINDOW_SECONDS),
-    case ReportingSeconds - CurrentDaySeconds of
-        Diff when Diff == 0 ->
-            timer:apply_after(DelaySeconds * 1000, gen_server, cast, [self(), send_data]);
-        Diff when Diff > 0 ->
-            timer:apply_after((Diff + DelaySeconds) * 1000, gen_server, cast, [self(), send_data]);
-        Diff ->
-            timer:apply_after((Diff + DelaySeconds + 86400) * 1000, gen_server, cast, [self(), send_data])
-    end,
+    timer:apply_after(1000, gen_server, cast, [self(), send_data]),
     {noreply, State};
 
 handle_cast(_Message, State) ->
@@ -151,7 +139,9 @@ send_data(State) ->
         case chef_telemetry:is_enabled() of
             true ->
                 State1 = init_req(State),
+                error_logger:info_msg("send_data / chef_telemetry:is_enabled true: State1: ~p", [State1]),
                 NodeName = get_fqdn(),
+                error_logger:info_msg("send_data / get_fqdn() NodeName: ~p", [NodeName]),
                 case check_send(NodeName) of
                     true ->
                         [{_Server, ServerVersion, _, _}] = release_handler:which_releases(permanent),
@@ -166,12 +156,13 @@ send_data(State) ->
                         State1
                 end;
             _ ->
+                error_logger:info_msg("send_data / chef_telemetry:is_enabled false: State: ~p", [State]),
                 State
         end,
     State6.
 
 get_api_fqdn(_State) ->
-    sqerl:execute(<<"delete from telemetry where property like 'NODE:%' and event_timestamp < (current_timestamp - interval '86700')">>),
+    sqerl:execute(<<"delete from telemetry where property like 'NODE:%' and event_timestamp < (current_timestamp - interval '1')">>),
     case sqerl:execute(<<"select trim(property) as property from telemetry where property like 'NODE:%'">>) of
         {ok, Rows} when is_list(Rows) ->
             FQDNs = [binary:part(FQDN, 5, size(FQDN) -5) || [{<<"property">>, FQDN}] <- Rows],
@@ -375,31 +366,39 @@ send_req(Req, State) ->
     end.
 
 check_send(Hostname) ->
+    error_logger:info_msg("check_send Hostname: ~p", [Hostname]),
     case sqerl:execute(<<"select telemetry_check_send('", Hostname/binary, "')">>) of
         {ok,[[{_, true}]]} ->
             true;
         {ok,[[{_, false}]]}  ->
             false;
         Error ->
+            error_logger:info_msg("check_send Error: ~p", [Error]),
             Error
     end.
 
 get_fqdn() ->
+    error_logger:info_msg("get_fqdn START"),
     Fqdn =
         try
             envy:get(chef_telemetry, fqdn, <<"">>, string)
         catch
-            _:_ ->
+            _:Reason ->
+                error_logger:info_msg("Error converting Fqdn to binary: ~p", [Reason]),
                 <<"">>
         end,
+    error_logger:info_msg("get_fqdn: Fqdn: ~p", [Fqdn]),
     NodeName = case Fqdn of
         <<"">> -> null;
         _ -> binary:bin_to_list(erlang:list_to_binary(Fqdn))
     end,
+    error_logger:info_msg("get_fqdn NodeName 1: ~p", [NodeName]),
     case NodeName of
         null ->
+            error_logger:info_msg("get_fqdn: fqdn not statically set"),
             to_binary("NODE:" ++ binary:bin_to_list(envy:get(oc_chef_wm, actions_fqdn, <<"">>, binary)));
         _ ->
+            error_logger:info_msg("get_fqdn NodeName 2: ~p", [NodeName]),
             to_binary("NODE:" ++ NodeName)
         end.
 
