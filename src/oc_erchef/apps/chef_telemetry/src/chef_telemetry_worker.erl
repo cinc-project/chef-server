@@ -110,6 +110,7 @@ handle_cast(send_data, State) ->
     {noreply, State2};
 
 handle_cast(init_timer, State) ->
+    error_logger:info_msg("Starting handle_cast(nit_timer): State: ~p", [State]),
     {_Date, {Hour, Min, _Sec}} = calendar:now_to_universal_time(erlang:timestamp()),
     {RHour, RMin} = State#state.report_time,
     CurrentDaySeconds = Hour * 3600 + Min * 60,
