@@ -387,7 +387,7 @@ get_fqdn() ->
                 to_binary("NODE:" ++ binary:bin_to_list(envy:get(oc_chef_wm, actions_fqdn, <<"">>, binary)));
             Name ->
                 error_logger:info_msg("get_fqdn Name: ~p", [Name]),
-                to_binary("NODE:" ++ binary:bin_to_list(Name/binary))
+                to_binary("NODE:" ++ Name/binary)
         end,
     NodeName.
 
