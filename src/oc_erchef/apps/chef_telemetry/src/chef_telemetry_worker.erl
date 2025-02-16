@@ -380,14 +380,14 @@ check_send(Hostname) ->
 
 get_fqdn() ->
     error_logger:info_msg("get_fqdn START"),
-    NodeName = envy:get(chef_telemetry, fqdn, null, string),
+    NodeName = binary:bin_to_list(envy:get(chef_telemetry, fqdn, null, binary)),
     case NodeName of
         null ->
             error_logger:info_msg("get_fqdn: fqdn not statically set"),
             to_binary("NODE:" ++ binary:bin_to_list(envy:get(oc_chef_wm, actions_fqdn, <<"">>, binary)));
         _ ->
             error_logger:info_msg("get_fqdn NodeName: ~p", [NodeName]),
-            to_binary("NODE:" ++ NodeName/binary)
+            to_binary("NODE:" ++ NodeName)
     end.
 
 mask(FQDNs) ->
