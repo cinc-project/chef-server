@@ -385,7 +385,7 @@ get_fqdn() ->
             null ->
                 error_logger:info_msg("get_fqdn: fqdn not statically set"),
                 to_binary("NODE:" ++ binary:bin_to_list(envy:get(oc_chef_wm, actions_fqdn, <<"">>, binary)));
-            Name ->
+            _ ->
                 error_logger:info_msg("get_fqdn Name: ~p", [Name]),
                 to_binary("NODE:" ++ Name/binary)
         end,
