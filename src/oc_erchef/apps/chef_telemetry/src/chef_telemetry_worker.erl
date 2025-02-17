@@ -367,7 +367,6 @@ send_req(Req, State) ->
 
 check_send(Hostname) ->
     error_logger:info_msg("check_send Hostname: ~p", [Hostname]),
-    error_logger:info_msg("check_send Hostname/binary: ~p", Hostname/binary),
     case sqerl:execute(<<"select telemetry_check_send('", Hostname/binary, "')">>) of
         {ok,[[{_, true}]]} ->
             true;
