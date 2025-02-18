@@ -379,7 +379,7 @@ check_send(Hostname) ->
 
 get_fqdn() ->
     error_logger:info_msg("get_fqdn START"),
-    NodeName = envy:get(chef_telemetry, fqdn, null, string),
+    NodeName = binary:bin_to_list(erlang:list_to_binary(envy:get(chef_telemetry, fqdn, <<"">>, string))),
     error_logger:info_msg("get_fqdn NodeName 1: ~p", [NodeName]),
     case NodeName of
         null ->
@@ -387,8 +387,7 @@ get_fqdn() ->
             to_binary("NODE:" ++ binary:bin_to_list(envy:get(oc_chef_wm, actions_fqdn, <<"">>, binary)));
         _ ->
             error_logger:info_msg("get_fqdn NodeName 2: ~p", [NodeName]),
-            error_logger:info_msg("binary_to_list: ~p", binary_to_list(NodeName)),
-            to_binary("NODE:" ++ binary_to_list(NodeName))
+            to_binary("NODE:" ++ NodeName)
         end.
 
 mask(FQDNs) ->
