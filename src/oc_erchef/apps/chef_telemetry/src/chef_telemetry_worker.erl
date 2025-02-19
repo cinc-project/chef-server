@@ -379,14 +379,15 @@ check_send(Hostname) ->
 
 get_fqdn() ->
     error_logger:info_msg("get_fqdn START"),
-    try
-        Fqdn = envy:get(chef_telemetry, fqdn, <<"">>, string)
-    catch
-        _:Reason ->
-            error_logger:error_msg("Error converting Fqdn to binary: ~p", [Reason]),
-            null
-        end
-    end,
+    Fqdn =
+        try
+            envy:get(chef_telemetry, fqdn, <<"">>, string)
+        catch
+            _:Reason ->
+                error_logger:error_msg("Error converting Fqdn to binary: ~p", [Reason]),
+                ""
+            end
+        end,
     NodeName = case Fqdn of
         "" -> null;
         _ -> binary:bin_to_list(erlang:list_to_binary(Fqdn))
