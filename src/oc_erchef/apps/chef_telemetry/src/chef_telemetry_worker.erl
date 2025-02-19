@@ -385,11 +385,11 @@ get_fqdn() ->
         catch
             _:Reason ->
                 error_logger:info_msg("Error converting Fqdn to binary: ~p", [Reason]),
-                ""
+                <<"">>
         end,
     error_logger:info_msg("get_fqdn: Fqdn: ~p", [Fqdn]),
     NodeName = case Fqdn of
-        "" -> null;
+        <<"">> -> null;
         _ -> binary:bin_to_list(erlang:list_to_binary(Fqdn))
     end,
     error_logger:info_msg("get_fqdn NodeName 1: ~p", [NodeName]),
