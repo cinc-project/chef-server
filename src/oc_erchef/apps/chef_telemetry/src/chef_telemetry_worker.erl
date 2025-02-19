@@ -382,7 +382,7 @@ get_fqdn() ->
     Fqdn =
         try
             error_logger:info_msg("get_fqdn try Fqdn"),
-            envy:get(chef_telemetry, fqdn, <<"">>, string)
+            envy:get(chef_telemetry, fqdn, <<"">>, string),
             error_logger:info_msg("get_fqdn: Fqdn: ~p", [Fqdn]),
         catch
             _:Reason ->
