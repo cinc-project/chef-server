@@ -386,7 +386,6 @@ get_fqdn() ->
             _:Reason ->
                 error_logger:error_msg("Error converting Fqdn to binary: ~p", [Reason]),
                 ""
-            end
         end,
     NodeName = case Fqdn of
         "" -> null;
