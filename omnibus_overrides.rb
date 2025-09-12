@@ -6,7 +6,7 @@ override :erlang, version: "26.2.5.14"
 override :'omnibus-ctl', version: "main"
 override :chef, version: "stable/cinc-v18.6.46"
 override :ohai, version: "v16.17.0"
-override :ruby, version: "3.1.7"
+override :ruby, version: "3.1.7", openssl_gem: '3.2.0'
 override :perl, version: "5.34.0"
 override :redis, version: "5.0.14"
 override :runit, version: "2.1.1" #standalone upgrade is failing, Needs to be reverted to 2.1.2 after fixing the umbrella
@@ -19,3 +19,8 @@ override :openresty, version: "1.27.1.2"
 
 override :nokogiri, version: "1.18.9"
 override :openssl, version: "3.2.4", fips_version: "3.1.2", fips_enabled: true
+
+# Required for EL10
+# override "libffi", version: "3.4.7"
+# override "runit", version: "2.2.0"
+# override "gecode", version: "6.2.0"
