@@ -13,11 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-chef_server_path = File.expand_path('../chef-server.rb', __FILE__)
+chef_server_path = File.expand_path('../cinc-server.rb', __FILE__)
 instance_eval(IO.read(chef_server_path), chef_server_path)
 
-name "chef-server-fips"
-package_name "chef-server-fips-core"
+name "cinc-server-fips"
+package_name "cinc-server-fips"
 
 # Use chef's scripts for everything.
 resources_path "#{resources_path}/../chef-server"
