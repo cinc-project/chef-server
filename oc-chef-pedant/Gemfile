@@ -16,7 +16,7 @@ gem 'chef-utils', '18.8.46', source: 'https://rubygems.cinc.sh'
 gem 'chef-config', '18.8.46', source: 'https://rubygems.cinc.sh'
 # This is a direct dependency of chef but keeps trying to pull from the cinc repo
 gem 'unf_ext'
-gem 'inspec-core', '= 5.22.95', source: 'https://rubygems.cinc.sh'
+gem 'inspec-core', '= 5.23.6', source: 'https://rubygems.cinc.sh'
 
 # For "rake chef_zero_spec"
 # gem 'chef-zero', github: 'chef/chef-zero'
