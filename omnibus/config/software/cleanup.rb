@@ -5,7 +5,8 @@ license :project_license
 
 build do
   # strip shared object files related to gecode installs
-  command "strip #{install_dir}/embedded/lib/libgecode*.so.32.0"
+  # Use find to handle both Gecode 3.x (.so.32.0) and 6.x (.so.*) naming
+  command "find #{install_dir}/embedded/lib -name 'libgecode*.so*' -exec strip {} +"
 
   # remove any test fixture pivotal keys to avoid user confusion
   command "find #{install_dir} -name pivotal.pem -delete"
