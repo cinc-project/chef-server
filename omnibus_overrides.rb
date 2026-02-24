@@ -23,4 +23,4 @@ override :openssl, version: "3.2.4", fips_version: "3.1.2", fips_enabled: true
 # Required for EL10
 # override "libffi", version: "3.4.7"
 # override "runit", version: "2.2.0"
-# override "gecode", version: "6.2.0"
+override "gecode", version: "6.2.0"
