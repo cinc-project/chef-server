@@ -439,6 +439,20 @@ void VersionProblem::Finalize()
 
 #endif
 
+// Bool variable/value branching macros for Gecode 6.x compatibility
+// In Gecode 6.x, branch() on BoolVarArray requires BoolVarBranch/BoolValBranch types
+#ifdef GECODE_VERSION_6
+#define BVAR_NONE BOOL_VAR_NONE()
+#define BVAR_DEGREE_MAX BOOL_VAR_DEGREE_MAX()
+#define BVAL_MAX BOOL_VAL_MAX()
+#define BVAL_MIN BOOL_VAL_MIN()
+#else
+#define BVAR_NONE INT_VAR_SIZE_MIN
+#define BVAR_DEGREE_MAX INT_VAR_DEGREE_MAX
+#define BVAL_MAX INT_VAL_MAX
+#define BVAL_MIN INT_VAL_MIN
+#endif
+
 // Define various branchers:
 //
 // The ordering here is important; we make variable choices in
@@ -455,13 +469,13 @@ void VersionProblem::AddBrancherPoor(std::ostream & o) {
         DEBUG_STREAM.flush();
     }
 
-    branch(*this, disabled_package_variables, INT_VAR_SIZE_MIN, INT_VAL_MAX);
+    branch(*this, disabled_package_variables, BVAR_NONE, BVAL_MAX);
     branch(*this, package_versions, INT_VAR_SIZE_MIN, INT_VAL_MIN);
     branch(*this, total_required_disabled, INT_VAL_MAX);
     branch(*this, total_induced_disabled, INT_VAL_MAX);
     branch(*this, total_suspicious_disabled, INT_VAL_MAX);
     branch(*this, total_disabled, INT_VAL_MAX);
-    branch(*this, at_latest, INT_VAR_SIZE_MIN, INT_VAL_MIN);
+    branch(*this, at_latest, BVAR_NONE, BVAL_MIN);
     branch(*this, total_preferred_at_latest, INT_VAL_MIN);
     branch(*this, total_not_preferred_at_latest, INT_VAL_MIN);
 }
@@ -477,13 +491,13 @@ void VersionProblem::AddBrancherOriginal(std::ostream & o) {
     // The ordering here is important; we make variable choices in
     // order that the branchings are listed, and a bad variable choice
     // can be orders of magnitude slower to solve.
-    branch(*this, disabled_package_variables, INT_VAR_SIZE_MIN, INT_VAL_MIN);
+    branch(*this, disabled_package_variables, BVAR_NONE, BVAL_MIN);
     branch(*this, package_versions, INT_VAR_SIZE_MIN, INT_VAL_MAX);
     branch(*this, total_required_disabled, INT_VAL_MIN);
     branch(*this, total_induced_disabled, INT_VAL_MIN);
     branch(*this, total_suspicious_disabled, INT_VAL_MIN);
     branch(*this, total_disabled, INT_VAL_MIN);
-    branch(*this, at_latest, INT_VAR_SIZE_MIN, INT_VAL_MAX);
+    branch(*this, at_latest, BVAR_NONE, BVAL_MAX);
     branch(*this, total_preferred_at_latest, INT_VAL_MAX);
     branch(*this, total_not_preferred_at_latest, INT_VAL_MAX);
 }
@@ -498,14 +512,14 @@ void VersionProblem::AddBrancherV2(std::ostream & o) {
     // The ordering here is important; we make variable choices in
     // order that the branchings are listed, and a bad variable choice
     // can be orders of magnitude slower to solve.
-    branch(*this, disabled_package_variables, INT_VAR_SIZE_MIN, INT_VAL_MIN);
+    branch(*this, disabled_package_variables, BVAR_NONE, BVAL_MIN);
     // Using INT_VAR_SIZE_MIN (what old versions do; can cause 12E3 x slowdown)
     branch(*this, package_versions, INT_VAR_DEGREE_MAX, INT_VAL_MAX);
     branch(*this, total_required_disabled, INT_VAL_MIN);
     branch(*this, total_induced_disabled, INT_VAL_MIN);
     branch(*this, total_suspicious_disabled, INT_VAL_MIN);
     branch(*this, total_disabled, INT_VAL_MIN);
-    branch(*this, at_latest, INT_VAR_SIZE_MIN, INT_VAL_MAX);
+    branch(*this, at_latest, BVAR_NONE, BVAL_MAX);
     branch(*this, total_preferred_at_latest, INT_VAL_MAX);
     branch(*this, total_not_preferred_at_latest, INT_VAL_MAX);
 }
@@ -522,8 +536,8 @@ void VersionProblem::AddBrancherAtLatest(std::ostream & o) {
     // latest in order of degree (# of constraints related to this variable)
     //
     branch(*this, package_versions, INT_VAR_DEGREE_MAX, INT_VAL_MAX);
-    branch(*this, at_latest, INT_VAR_DEGREE_MAX, INT_VAL_MAX);
-    branch(*this, disabled_package_variables, INT_VAR_SIZE_MIN, INT_VAL_MIN);
+    branch(*this, at_latest, BVAR_DEGREE_MAX, BVAL_MAX);
+    branch(*this, disabled_package_variables, BVAR_NONE, BVAL_MIN);
     branch(*this, total_preferred_at_latest, INT_VAL_MAX);
     branch(*this, total_disabled, INT_VAL_MIN);
     branch(*this, total_required_disabled, INT_VAL_MIN);
