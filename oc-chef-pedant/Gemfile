@@ -7,10 +7,7 @@ gem "pry-byebug"
 gem "pry-stack_explorer"
 gem "rake"
 gem "rest-client", git: "https://github.com/chef/rest-client.git", branch: "jfm/ucrt_update1"
-
-# For "rake chef_zero_spec"
-# PR #352 merged to main but not released yet - use main branch
-gem 'chef-zero', git: "https://github.com/chef/chef-zero.git", branch: "main"
+gem 'chef-zero', source: 'https://rubygems.cinc.sh'
 
 # If you want to load debugging tools into the bundle exec sandbox,
 # # add these additional dependencies into Gemfile.local
