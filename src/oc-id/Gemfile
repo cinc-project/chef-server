@@ -5,11 +5,11 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '7.1.5.2'
 gem "rest-client", git: "https://github.com/chef/rest-client", branch: "jfm/ucrt_update1"
-gem 'chef', '18.10.17'
-gem 'chef-utils'
-gem 'chef-config'
+gem 'chef', '18.10.17', source: 'https://rubygems.cinc.sh'
+gem 'chef-utils', source: 'https://rubygems.cinc.sh'
+gem 'chef-config', source: 'https://rubygems.cinc.sh'
 gem 'chef-zero', source: 'https://rubygems.cinc.sh'
-gem 'inspec-core'
+gem 'inspec-core', source: 'https://rubygems.cinc.sh'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.11'
 gem 'jquery-rails'

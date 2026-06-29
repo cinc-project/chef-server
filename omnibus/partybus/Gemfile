@@ -1,5 +1,4 @@
 source "https://rubygems.org"
-source "https://rubygems.cinc.sh"
 
 gem "sequel", "~> 3.34.1"
 gem "pg", "~> 0.16.0"
@@ -7,10 +6,7 @@ gem "veil", "0.3.11"
 # Version lock these to match Gemfile.lock when doing a stable release
 if ENV['CHANNEL'] =~ /stable|unstable|current/
   gem "bcrypt", "= 3.1.16"
-end
-
-if ENV['CHANNEL'] =~ /stable|unstable|current/
-  gem "chef-utils", "= 16.17.51"
+  gem "chef-utils", "= 18.10.17", source: "https://rubygems.cinc.sh"
 else
-  gem "chef-utils", "~> 16.17"
+  gem "chef-utils", "~> 18.10", source: "https://rubygems.cinc.sh"
 end

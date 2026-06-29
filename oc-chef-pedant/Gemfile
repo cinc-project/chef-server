@@ -13,6 +13,9 @@ gem "rest-client", git: "https://github.com/chef/rest-client.git", branch: "jfm/
 # PR #352 merged to main but not released yet - use main branch
 gem 'chef-zero', source: 'https://rubygems.cinc.sh'
 
+# Pull chef-utils from the Cinc repo; gemspec caps it at < 19 (the 18.x line)
+gem 'chef-utils', source: 'https://rubygems.cinc.sh'
+
 # If you want to load debugging tools into the bundle exec sandbox,
 # # add these additional dependencies into Gemfile.local
 eval(File.read(__FILE__ + ".local"), binding) if File.exist?(__FILE__ + ".local")
