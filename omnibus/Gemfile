@@ -5,7 +5,7 @@ group :omnibus do
   gem "omnibus", github: ENV.fetch("OMNIBUS_GITHUB_REPO", "chef/omnibus"), branch: ENV.fetch("OMNIBUS_GITHUB_BRANCH", "main")
   gem "omnibus-software", git: ENV.fetch("OMNIBUS_SOFTWARE_GIT_REPO", "https://gitlab.com/cinc-project/upstream/omnibus-software.git"), branch: ENV.fetch("OMNIBUS_SOFTWARE_GIT_BRANCH", "stable/cinc")
   gem 'artifactory'
-  gem 'license_scout',   git: "https://github.com/chef/license_scout.git", branch: "1-stable"
+  gem 'license_scout'
   gem "rest-client", git: "https://github.com/chef/rest-client", branch: "jfm/ucrt_update1"
 end
 
