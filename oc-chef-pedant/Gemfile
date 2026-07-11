@@ -1,4 +1,5 @@
 source "https://rubygems.org"
+source "https://rubygems.cinc.sh"
 
 # minimum safe rack version, single-sourced from the
 # omnibus-config repo's infra-server cookbook libraries/safe_versions.rb (the
@@ -97,9 +98,12 @@ gem "pry-stack_explorer"
 gem "rake"
 gem "rest-client", git: "https://github.com/chef/rest-client.git", branch: "jfm/ucrt_update1"
 
-# For "rake chef_zero_spec"
-# PR #352 merged to main but not released yet - use main branch
-gem 'chef-zero', git: "https://github.com/chef/chef-zero.git", branch: "main"
+# For "rake chef_zero_spec". chef-zero stays on rubygems.org: sourcing it from
+# cinc.sh traps unf_ext (not mirrored there) and breaks the bundle.
+gem 'chef-zero'
+
+# Pull chef-utils from the Cinc repo; gemspec caps it at < 19 (the 18.x line)
+gem 'chef-utils', source: 'https://rubygems.cinc.sh'
 
 # see the SafeVersions setup at the top of this file.
 # Example only -- how to pin an exact version: replace X.Y.Z before uncommenting:

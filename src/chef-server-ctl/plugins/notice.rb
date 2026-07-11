@@ -73,7 +73,7 @@ oc_id |  | Apache-2.0
 oc-chef-pedant |  | Apache-2.0
 ohai | 18.2.6 | Apache-2.0
 omniauth-chef | 0.4.1 | Apache-2.0
-omnibus-ctl | 4e968f4cf713a545bbb70ee13b8ff7ebd37f7f3e | Apache-2.0
+omnibus-ctl | 0.6.10 | Apache-2.0
 opensearch | 1.3.20 | Apache-2.0
 opscoderl_folsom | d493429f895a904e9fd86d12a68f7075dfa8e227 | Apache-2.0
 opscoderl_httpc | 3cdc661e55a48af321b7097941b9a03e8d7b113f | Apache-2.0
@@ -219,7 +219,7 @@ libedit | 20120601-3.0 | BSD-3-Clause
 recon | f7b6c08e6e9e2219db58bfb012c58c178822e01e | BSD-3-Clause
 runit | 2.1.1 | BSD-3-Clause
 String-Formatter | 1.235 | gpl_2
-haproxy | 3.0.11 | GPL-2.0
+haproxy | 3.0.25 | GPL-2.0
 logrotate | 3.19.0 | GPL-2.0
 server-open-jre | 17.0.9+9 | GPL-2.0 (with the Classpath Exception)
 config_guess | 84f04b02a7e2fc8eaa9d52deee5f6d57b06fe447 | GPL-3.0 (with exception)
@@ -229,7 +229,7 @@ poolboy | 29be47db8c2be38b18c908e43a80ebb7b9b6116b | ISC
 Test-NoWarnings | 1.06 | lgpl_2_1
 libiconv | 1.17 | LGPL-2.1
 libintl-perl | 1.23 | LGPL-2.1
-libuuid | 2.21 | LGPL-2.1
+libuuid | 2.42.1 | LGPL-2.1
 kgio | 2.11.4 | LGPL-2.1+
 raindrops | 0.20.1 | LGPL-2.1+
 erlsom | 131e660ee39254a58b75075e07dfd742f445bfce | LGPL-3.0
@@ -332,7 +332,7 @@ nokogiri | 1.18.9-x86_64-linux-gnu | MIT
 nori | 2.7.0 | MIT
 observer_cli | baa70569bccc5508e9839e20768540ef3cdca016 | MIT
 omniauth | 2.1.3 | MIT
-openresty-lpeg | 1.0.1 | MIT
+openresty-lpeg | 1.1.0 | MIT
 parallel | 1.27.0 | MIT
 parser | 3.3.9.0 | MIT
 parslet | 2.0.0 | MIT
@@ -411,8 +411,8 @@ cacerts | 2022-10-11 | MPL-2.0
 sslshake | 1.3.1 | MPL-2.0
 vault | 0.18.2 | MPL-2.0
 TermReadKey | 2.38 | Public Domain 
-postgresql13 | 13.22 | PostgreSQL
-postgresql96-bin | 9.6.23 | PostgreSQL
+postgresql13 | 13.23 | PostgreSQL
+postgresql96-bin | 9.6.24 | PostgreSQL
 chef-server-ctl |  | Proprietary
 cleanup | 1.0.0 | Proprietary
 gpg-key | 1.0.1 | Proprietary
@@ -518,7 +518,7 @@ oc_id,
 oc-chef-pedant,	
 ohai v18.2.4,
 omniauth-chef v0.4.1,
-omnibus-ctl	v4e968f4cf713a545bbb70ee13b8ff7ebd37f7f3e,
+omnibus-ctl	v0.6.10,
 opscoderl_folsom	vd493429f895a904e9fd86d12a68f7075dfa8e227,
 opscoderl_httpc	v3cdc661e55a48af321b7097941b9a03e8d7b113f,
 opscoderl_wm v6495dd0f97f64f363db1c05504436834cc1136cd,
@@ -1305,7 +1305,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 (5) GNU GENERAL PUBLIC LICENSE - Version 2, June 1991 
 
-Progress Chef Infra Server v15 incorporates String-Formatter v1.235, haproxy v3.0.11, and logrotate v3.19.0.  Such technologies are subject to the following terms and conditions:
+Progress Chef Infra Server v15 incorporates String-Formatter v1.235, haproxy v3.0.25, and logrotate v3.19.0.  Such technologies are subject to the following terms and conditions:
 GNU GENERAL PUBLIC LICENSE
 Version 2, June 1991
 
@@ -1759,7 +1759,7 @@ END OF TERMS AND CONDITIONS
 
 (8) GNU LESSER GENERAL PUBLIC LICENSE - Version 2.1, February 1999:
 
-Progress Chef Infra Server v15 incorporates Test-NoWarnings v1.06, libiconv v1.17, libintl-perl	v1.23, libuuid v2.21, kgio v2.11.4, and raindrops v0.20.1.  Such technologies are subject to the following terms and conditions: 
+Progress Chef Infra Server v15 incorporates Test-NoWarnings v1.06, libiconv v1.17, libintl-perl	v1.23, libuuid v2.42.1, kgio v2.11.4, and raindrops v0.20.1.  Such technologies are subject to the following terms and conditions: 
 
 GNU LESSER GENERAL PUBLIC LICENSE
 Version 2.1, February 1999
@@ -3570,7 +3570,7 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-(ca) Progress Chef Infra Server v15 incorporates openresty-lpeg v1.0.1.  Such technology is subject to the following terms and conditions:
+(ca) Progress Chef Infra Server v15 incorporates openresty-lpeg v1.1.0.  Such technology is subject to the following terms and conditions:
 
 License
 Copyright © 2007-2017 Lua.org, PUC-Rio.
@@ -5542,7 +5542,7 @@ Exhibit B - "Incompatible With Secondary Licenses" Notice
 
 (13) PostgreSQL License:
 
-Progress Chef Infra Server v15 incorporates postgresql96-bin	v9.6.23.  Such technology is subject to the following terms and conditions:
+Progress Chef Infra Server v15 incorporates postgresql96-bin	v9.6.24.  Such technology is subject to the following terms and conditions:
 
 PostgreSQL is released under the PostgreSQL License, a liberal Open Source license, similar to the BSD or MIT licenses.
 

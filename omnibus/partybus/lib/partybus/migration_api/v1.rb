@@ -67,14 +67,17 @@ module Partybus
       # :database, and/or :path.
       def run_sqitch(target, service, opts = {})
         options = default_opts_for_service(service).merge(opts)
+        # sqitch 1.6.1: engine comes from the db:pg:// URI scheme; --to-change replaces
+        # the removed --to-target. 'target' is a bare change/tag name (or empty); tags
+        # must be @-prefixed (e.g. @2.4.0). Routed via --to-change to avoid ambiguity
+        # with the URI positional argument.
+        to_change = (target && !target.to_s.strip.empty?) ? "--to-change #{target}" : ''
+        # Password is supplied via PGPASSWORD env (below), never in the URI.
+        db_uri = "db:pg://#{options[:username]}@#{Partybus.config.postgres['vip']}:#{Partybus.config.postgres['port']}/#{options[:database]}"
         command = <<-EOM.gsub(/\s+/," ").strip!
-          sqitch --engine pg
-            --db-name #{options[:database]}
-            --db-host #{Partybus.config.postgres['vip']}
-            --db-port #{Partybus.config.postgres['port']}
-            --db-user #{options[:username]}
-            --top-dir /opt/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/embedded/service/#{options[:path]}
-            deploy #{target} --verify
+          sqitch --quiet
+            --chdir /opt/#{ChefUtils::Dist::Org::LEGACY_CONF_DIR}/embedded/service/#{options[:path]}
+            deploy #{db_uri} #{to_change} --verify
         EOM
         run_command(command, env: {"PGPASSWORD" => options[:password]})
       end

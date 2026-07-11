@@ -22,7 +22,6 @@ dependency "libiconv"
 dependency "private-chef-scripts" # assorted scripts used by installed instance
 
 dependency "openresty" # load balanacer
-dependency "rb-readline" # a replacement for readline due to
 dependency "redis-gem" # gem for interacting with redis
 dependency "openresty-lpeg"  # lua-based routing
 dependency "runit"
