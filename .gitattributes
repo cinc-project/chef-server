@@ -1,0 +1,11 @@
+# Cinc maintains its own dependency lockfiles; they are regenerated at build
+# time by the server build repo's patch.sh. Never 3-way merge them during an
+# upstream rebase — a silent auto-merge drops Cinc gem entries (e.g.
+# mixlib-install) and breaks the build's `bundle lock`.
+#
+# Register the driver once per clone:
+#   git config merge.ignore.name 'ignore changes merge driver'
+#   git config merge.ignore.driver 'touch %A'
+Gemfile.lock      merge=ignore
+**/Gemfile.lock   merge=ignore
+CHANGELOG.md      merge=union
