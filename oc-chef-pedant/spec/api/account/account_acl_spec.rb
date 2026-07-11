@@ -1042,8 +1042,17 @@ describe "ACL API", :acl do
           let(:groups) { %w{users admins} }
           let(:read_groups) { %w{users clients admins} }
         when "cookbook_artifacts"
+          # Give each example a unique object. This block create/deletes the
+          # fixture in before/after :each ~100 times; reusing one fixed name
+          # ("new-object") races the cookbook-artifact's authz-object cleanup,
+          # so an occasional re-create lands before the prior authz id is reaped
+          # and is evaluated as an *update* -- failing fixture setup with
+          # "missing update permission". A unique name makes every create a
+          # genuine create. (Note: creation_body must use new_object, not a
+          # hardcoded literal, so the body name matches the URL.)
+          let(:new_object) { "new-object-#{rand_id}" }
           let(:creation_url) { api_url("#{type}/#{new_object}/1111111111111111111111111111111111111111") }
-          let(:creation_body) { new_cookbook_artifact("new-object", "1111111111111111111111111111111111111111", version: "1") }
+          let(:creation_body) { new_cookbook_artifact(new_object, "1111111111111111111111111111111111111111", version: "1") }
           let(:deletion_url) { api_url("#{type}/#{new_object}/1111111111111111111111111111111111111111") }
           let(:groups) { %w{admins users} }
           let(:read_groups) { %w{admins clients users} }

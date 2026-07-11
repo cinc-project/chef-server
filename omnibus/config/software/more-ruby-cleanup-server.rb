@@ -58,6 +58,11 @@ build do
   # frozen default gem), unused by chef-server (the services carry their own
   # newer net-imap), with several CVEs fixed only in later lines. Replace the
   # interpreter copy with 0.5.15 -- the last release supporting Ruby 3.1.
-  gem "uninstall net-imap --all --executables --ignore-dependencies", env: env
-  gem "install net-imap --version 0.5.15 --no-document", env: env
+  #
+  # cwd: install_dir is required because this software definition is sourceless
+  # (its `source path` files dir does not exist), so omnibus never creates
+  # project_dir. The gem DSL defaults its cwd to that missing project_dir, so
+  # without an explicit cwd these steps die with Dir.chdir ENOENT.
+  gem "uninstall net-imap --all --executables --ignore-dependencies", env: env, cwd: install_dir
+  gem "install net-imap --version 0.5.15 --no-document", env: env, cwd: install_dir
 end
