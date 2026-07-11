@@ -1,4 +1,5 @@
 source "https://rubygems.org"
+source "https://rubygems.cinc.sh"
 
 gemspec
 # For debugging in dvm
@@ -8,9 +9,12 @@ gem "pry-stack_explorer"
 gem "rake"
 gem "rest-client", git: "https://github.com/chef/rest-client.git", branch: "jfm/ucrt_update1"
 
-# For "rake chef_zero_spec"
-# PR #352 merged to main but not released yet - use main branch
-gem 'chef-zero', git: "https://github.com/chef/chef-zero.git", branch: "main"
+# For "rake chef_zero_spec". chef-zero stays on rubygems.org: sourcing it from
+# cinc.sh traps unf_ext (not mirrored there) and breaks the bundle.
+gem 'chef-zero'
+
+# Pull chef-utils from the Cinc repo; gemspec caps it at < 19 (the 18.x line)
+gem 'chef-utils', source: 'https://rubygems.cinc.sh'
 
 # If you want to load debugging tools into the bundle exec sandbox,
 # # add these additional dependencies into Gemfile.local

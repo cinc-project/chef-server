@@ -1,17 +1,9 @@
 source "https://rubygems.org"
+source "https://rubygems.cinc.sh"
 
 gemspec
 
 gem "rest-client", git: "https://github.com/chef/rest-client", branch: "jfm/ucrt_update1"
-
-# Version lock these to match Gemfile.lock when doing a stable release
-if ENV['CHANNEL'] =~ /stable|unstable|current/
-  gem "chef", "= 18.8.46", source: "https://rubygems.cinc.sh"
-  gem "knife", "~> 18.8.68", source: "https://rubygems.cinc.sh"
-else
-  gem "chef", "~> 18.8", source: "https://rubygems.cinc.sh"
-  gem "knife", "~> 18.8.68", source: "https://rubygems.cinc.sh"
-end
 
 gem "toml" # for habitat-land
 
@@ -21,7 +13,13 @@ gem "knife-ec-backup", "~> 3.0.5"
 # (carried from upstream 15.10.114; chef-server-ctl runs on Ruby 3.1)
 gem "public_suffix", "< 7.0"
 
-# Cinc wordmark fixes
-gem "chef_backup", source: "https://rubygems.cinc.sh"
-gem "mixlib-install", "= 3.12.30", source: "https://rubygems.cinc.sh"
-gem "inspec-core", source: "https://rubygems.cinc.sh"
+# Cinc gems come from rubygems.cinc.sh (declared as a second global source
+# above) and their transitive deps from rubygems.org. A scoped `source` block
+# does not work here: chef pulls deps (e.g. unf_ext) that live only on
+# rubygems.org, which a block would force to resolve from cinc.sh.
+gem "chef", "~> 18.10"
+gem "knife", "~> 18.10.18"
+
+gem "chef_backup"
+gem "mixlib-install"
+gem "inspec-core"

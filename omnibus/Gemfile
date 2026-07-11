@@ -1,19 +1,26 @@
 source 'https://rubygems.org'
+source 'https://rubygems.cinc.sh' do
+  gem "omnibus"
+  gem "omnibus-software"
+end
 
-# Install omnibus software
 group :omnibus do
-  gem "omnibus", github: ENV.fetch("OMNIBUS_GITHUB_REPO", "chef/omnibus"), branch: ENV.fetch("OMNIBUS_GITHUB_BRANCH", "main")
-  gem "omnibus-software", git: ENV.fetch("OMNIBUS_SOFTWARE_GIT_REPO", "https://gitlab.com/cinc-project/upstream/omnibus-software.git"), branch: ENV.fetch("OMNIBUS_SOFTWARE_GIT_BRANCH", "stable/cinc")
   gem 'artifactory'
-  gem 'license_scout'
+  # Use the Cinc license-scout fork (carries Cinc's license overrides). 1-stable
+  # is 1.4.2, satisfying the omnibus 10.x `license_scout ~> 1.4.0` requirement.
+  gem "license_scout", git: ENV.fetch("LICENSE_SCOUT_GITHUB_REPO", "https://gitlab.com/cinc-project/upstream/license-scout.git"), branch: ENV.fetch("LICENSE_SCOUT_GITHUB_BRANCH", "1-stable")
   gem "rest-client", git: "https://github.com/chef/rest-client", branch: "jfm/ucrt_update1"
 end
 
 group :test do
   gem 'test-kitchen' # for Test Kitchen testing of the omnibus builds
-  gem 'berkshelf', '~> 8.0.22' # depsolving the Test Kitchen suite
+  # '>= 8.0' (was '~> 8.0.22'): the 8.0.22 pin caps ffi <= 1.16.3, but
+  # omnibus-software 26.6.x needs ffi >= 1.17.
+  gem 'berkshelf', '>= 8.0'
   gem 'archive-tar-minitar' # required by berkshelf for packaging
-  gem 'chef', '~> 18.8.46'
+  # NOTE: do NOT pin chef here. A chef 18.x pin forces ohai ~> 18, which
+  # conflicts with the Cinc omnibus 10.x requirement of ohai >= 19 and makes
+  # bundler downgrade omnibus to 9.0.24 (which lacks s3_acl). berkshelf still
+  # pulls chef transitively for the kitchen suite, unconstrained.
   gem 'rake'
-  gem "rest-client", git: "https://github.com/chef/rest-client", branch: "jfm/ucrt_update1"
 end
