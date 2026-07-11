@@ -2,9 +2,9 @@
 # When updating this, check doc/FrequentTasks.md for checklists to ensure all
 # the various usages are updated in lockstep
 #
-#override :erlang, version: "26.2.5.14"
+override :erlang, version: "26.2.5.14"
 override :'omnibus-ctl', version: "main"
-#override :chef, version: "v18.8.46"
+override :chef, version: "stable/cinc-v18.6.46"
 override :ohai, version: "v16.17.0"
 override :ruby, version: "3.1.7"
 override :perl, version: "5.34.0"
@@ -15,7 +15,7 @@ override :sqitch, version: "0.973"
 override :logrotate, version: "3.19.0"
 
 # update `src/openresty-noroot/habitat/plan.sh` when updating this version.
-#override :openresty, version: "1.27.1.2"
+override :openresty, version: "1.27.1.2"
 
 override :nokogiri, version: "1.18.9"
-override :openssl, fips_version: "3.1.2", fips_enabled: true
+override :openssl, version: "3.2.4", fips_version: "3.1.2", fips_enabled: true

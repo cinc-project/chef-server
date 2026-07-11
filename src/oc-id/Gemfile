@@ -2,17 +2,22 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '7.2.3.1'
+gem 'rails', '7.1.5.2'
 gem "rest-client", git: "https://github.com/chef/rest-client", branch: "jfm/ucrt_update1"
-gem 'chef', '~> 18.10.17'
+gem 'chef', '18.8.46', source: "https://rubygems.cinc.sh"
+gem 'chef-utils', source: 'https://rubygems.cinc.sh'
+gem 'chef-config', source: 'https://rubygems.cinc.sh'
+gem 'chef-zero', source: 'https://rubygems.cinc.sh'
+gem 'inspec-core', source: 'https://rubygems.cinc.sh'
+# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.11'
 gem 'jquery-rails'
-gem 'jwt', '>= 3.2.0' # For Zendesk SSO; >= 3.2.0 fixes empty-key HMAC bypass CVE
+gem 'jwt' # For Zendesk SSO
 gem 'config', '~> 4.1' # Replacement of rails_config gem
 gem 'rb-readline', '~> 0.5.2', require: false
 gem 'sass-rails', '>= 4.0.3'
 gem 'turbolinks', '~> 5'
-gem 'public_suffix', '< 7.0' # public_suffix 7.0+ requires Ruby >= 3.2; pin for Ruby 3.1 compatibility
+gem 'nokogiri', '1.18.9', platforms: :ruby # Force Ruby platform to avoid glibc compatibility issues
 gem 'pg', '>= 0.18', '< 1.6' # active_record 4.2.8 pins this but doesn't manifest this in the gemspec for some reason
 
 gem 'unicorn-rails',
