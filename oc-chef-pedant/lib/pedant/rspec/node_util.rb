@@ -15,6 +15,7 @@
 
 require "pedant/request"
 require "rspec/core/shared_context"
+require "active_support/core_ext/hash/keys"
 
 module Pedant
   module RSpec
