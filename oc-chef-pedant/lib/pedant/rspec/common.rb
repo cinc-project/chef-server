@@ -21,6 +21,18 @@ require "pedant/request"
 require "pedant/rspec/common_responses"
 require "pedant/rspec/http_status_codes"
 
+# Several specs build unique names with a top-level `rand_id` helper. It is
+# defined ad hoc in a handful of spec files (keys_context.rb and the account/
+# keys specs), so it is only available to a file like account_group_spec.rb
+# when one of those siblings happens to load first in the full suite. When
+# rspec-rerun re-runs a single failed spec in isolation, none of them load and
+# the spec dies with "NoMethodError: undefined ... rand_id", which keeps a
+# flaky failure red on the retry. Define it here in the common require that
+# every spec pulls in so it is always available, standalone or not.
+def rand_id
+  rand(10**7...10**8).to_s
+end
+
 # Temporary, until knife tests are activated for non-open-source platforms
 
 module Pedant
