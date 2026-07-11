@@ -8,6 +8,14 @@ require "chef_server_ctl/config"
 require "license_acceptance/acceptor"
 require "chef-utils/dist"
 
+# runit's `sv` waits SVWAIT seconds (default 7) for a service to restart. A
+# busy postgres can take longer than that to shut down cleanly (it flushes a
+# final checkpoint), so `<ctl> restart` would spuriously report a postgres
+# timeout and exit non-zero even though postgres comes right back. Match the
+# Habitat wrapper's SVWAIT=30 so omnibus-ctl's sv commands wait long enough.
+# An explicitly-set SVWAIT still wins.
+ENV["SVWAIT"] ||= "30"
+
 module Omnibus
   # This implements callbacks for handling commands related to the
   # external services supported by Chef Server. As additional services

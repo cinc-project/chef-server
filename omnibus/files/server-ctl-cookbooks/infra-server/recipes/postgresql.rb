@@ -66,15 +66,24 @@ end
 # Upgrade the cluster if you gotta
 pg_upgrade 'upgrade_if_necessary'
 
-component_runit_service 'postgresql' do
-  control ['t']
+# Initialize (or upgrade) the data cluster BEFORE the runit service is enabled.
+# component_runit_service enables the service, and runsvdir then auto-starts
+# postgres; if that happens while pg_cluster's initdb is still bootstrapping,
+# the two postgres processes race for the data directory and initdb aborts with
+# "lock file postmaster.pid already exists". The reconfigure retry then finds a
+# half-populated data dir ("exists but is not empty") and fails outright.
+# Initializing first guarantees the service always starts against a ready
+# cluster. The :delayed notify below forward-references the service (declared
+# just after) and is resolved at the end of the converge.
+pg_cluster postgresql_data_dir do
+  #
+  # This is delayed because we sometimes need to restart oc_erchef and other clients to release the connections and allow a restart.
+  #
+  notifies :restart, 'component_runit_service[postgresql]', :delayed if is_data_master?
 end
 
-#
-# This is delayed because we sometimes need to restart oc_erchef and other clients to release the connections and allow a restart.
-#
-pg_cluster postgresql_data_dir do
-  notifies :restart, 'component_runit_service[postgresql]', :delayed if is_data_master?
+component_runit_service 'postgresql' do
+  control ['t']
 end
 
 link postgresql_data_dir_symlink do

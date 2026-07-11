@@ -57,10 +57,15 @@ class SslPreflightValidator < PreflightValidator
     output = openssl_version
     return true if output =~ /^unknown/ # Handle unknown case
 
-    # Check for FIPS provider in multi-line output
-    return true if output =~ /OpenSSL FIPS Provider.*\n.*version: 3.2.4.*\n.*status: active/m
+    # OpenSSL 3.x exposes FIPS through the provider list (`openssl list
+    # -providers`); treat an active OpenSSL FIPS Provider of any version as
+    # FIPS support. The provider version (e.g. 3.0.9) is independent of the
+    # base OpenSSL version and must not be pinned here -- pinning it to 3.2.4
+    # made this check fail on the shipped 3.0.9 FIPS provider, which aborted
+    # every FIPS-mode reconfigure (most visibly on restore).
+    return true if output =~ /OpenSSL FIPS Provider\n\s+version:.*\n\s+status: active/
 
-    # Keep existing -fips check
+    # OpenSSL 1.x reported FIPS via a -fips version identifier.
     return true if output =~ /OpenSSL .*-fips/
 
     false

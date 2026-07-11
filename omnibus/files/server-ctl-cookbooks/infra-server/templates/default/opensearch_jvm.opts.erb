@@ -32,6 +32,20 @@
 ## JVM temporary directory
 -Djava.io.tmpdir=<%= @tmp_dir %>
 
+## locale providers
+#
+# Pin COMPAT on JDK 9+. OpenSearch's default (SPI,COMPAT) registers its own
+# CalendarDataProvider SPI (IsoCalendarDataProvider), which is loaded lazily
+# under the SecurityManager; when that first load lands inside the
+# opensearch-security plugin's init it is denied the "localeServiceProvider"
+# RuntimePermission -- the plugin then fails to load and OpenSearch will not
+# start. OpenSearch installs its own policy programmatically (so an added
+# -Djava.security.policy / plugin-security.policy grant cannot reach the core
+# codebase that needs the permission), so avoid the SPI provider entirely. The
+# Elasticsearch jvm.options here pins COMPAT for the same JDK 9+ i18n reason;
+# match it (also keeps date/locale parsing consistent between the two).
+9-:-Djava.locale.providers=COMPAT
+
 ## heap dumps
 
 # generate a heap dump when an allocation from the Java heap fails
