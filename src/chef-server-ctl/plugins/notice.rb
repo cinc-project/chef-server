@@ -74,7 +74,7 @@ oc-chef-pedant |  | Apache-2.0
 ohai | 18.2.6 | Apache-2.0
 omniauth-chef | 0.4.1 | Apache-2.0
 omnibus-ctl | 4e968f4cf713a545bbb70ee13b8ff7ebd37f7f3e | Apache-2.0
-opensearch | 1.3.20 | Commercial License
+opensearch | 1.3.20 | Apache-2.0
 opscoderl_folsom | d493429f895a904e9fd86d12a68f7075dfa8e227 | Apache-2.0
 opscoderl_httpc | 3cdc661e55a48af321b7097941b9a03e8d7b113f | Apache-2.0
 opscoderl_wm | 6495dd0f97f64f363db1c05504436834cc1136cd | Apache-2.0
@@ -411,7 +411,7 @@ cacerts | 2022-10-11 | MPL-2.0
 sslshake | 1.3.1 | MPL-2.0
 vault | 0.18.2 | MPL-2.0
 TermReadKey | 2.38 | Public Domain 
-postgresql13 | 13.22 | Commercial License
+postgresql13 | 13.22 | PostgreSQL
 postgresql96-bin | 9.6.23 | PostgreSQL
 chef-server-ctl |  | Proprietary
 cleanup | 1.0.0 | Proprietary

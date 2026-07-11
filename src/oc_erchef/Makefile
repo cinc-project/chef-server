@@ -86,7 +86,18 @@ bundle_clean:
 
 bundle:
 	@echo bundling up depselector, This might take a while...
-	@cd apps/chef_objects/priv/depselector_rb; bundle install --deployment --path .bundle
+	@cd apps/chef_objects/priv/depselector_rb; \
+		bundle install --deployment --path .bundle 2>&1 || ( \
+			echo "Applying Gecode 6.x compatibility patch to dep_selector..." && \
+			DEP_EXT=$$(find .bundle -path '*/dep-selector-*/ext/dep_gecode' -type d 2>/dev/null | head -1) && \
+			if [ -n "$$DEP_EXT" ]; then \
+				cp patches/dep_selector_to_gecode.cpp "$$DEP_EXT/" && \
+				cp patches/dep_selector_to_gecode.h "$$DEP_EXT/" && \
+				bundle install --deployment --path .bundle; \
+			else \
+				echo "ERROR: Could not find dep-selector ext directory" && exit 1; \
+			fi \
+		)
 
 
 CHEFDK_GECODE_PATH:=/opt/chefdk/embedded/lib/ruby/gems/2.6.0/gems/dep-selector-libgecode-1.3.5/lib/dep-selector-libgecode/vendored-gecode
