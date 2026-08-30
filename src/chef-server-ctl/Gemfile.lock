@@ -34,7 +34,7 @@ PATH
 
 GEM
   remote: https://rubygems.org/
-  remote: https://packagecloud.io/cinc-project/stable/
+  remote: https://rubygems.cinc.sh/
   specs:
     abbrev (0.1.2)
     addressable (2.9.0)
