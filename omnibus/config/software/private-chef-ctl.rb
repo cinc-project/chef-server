@@ -23,6 +23,8 @@ skip_transitive_dependency_licensing true
 
 dependency "postgresql13" # for libpq
 dependency "omnibus-ctl"
+# for the cinc-wrapper binstub the link steps below point at
+dependency "chef"
 
 safe_versions_source = File.expand_path("#{project.files_path}/server-ctl-cookbooks/infra-server/libraries/safe_versions.rb")
 
@@ -51,8 +53,8 @@ build do
   link "#{install_dir}/bin/cinc-server-ctl", "#{install_dir}/embedded/bin/cinc-server-ctl"
   link "#{install_dir}/bin/cinc-server-ctl", "#{install_dir}/embedded/bin/private-cinc-ctl"
 
-  # Cinc Wrapper Install
-  copy "#{project_dir}/../../cinc/cinc-wrapper", "#{install_dir}/bin/"
+  # cinc-wrapper is the `chef` software definition's chef-bin binstub; it
+  # re-execs $0 with "chef" swapped for "cinc" to reach cinc-server-ctl.
   %w(chef-server-ctl private-chef-ctl).each do |bin|
     link "#{install_dir}/bin/cinc-wrapper", "#{install_dir}/bin/#{bin}"
   end
