@@ -24,9 +24,15 @@ skip_transitive_dependency_licensing true
 dependency "postgresql13" # for libpq
 dependency "omnibus-ctl"
 
+safe_versions_source = File.expand_path("#{project.files_path}/server-ctl-cookbooks/infra-server/libraries/safe_versions.rb")
+
 build do
 
   env = with_standard_compiler_flags(with_embedded_path)
+
+  # Stage the Gemfile's CVE floors next to it: the isolated project_dir the
+  # `source path:` fetcher builds in cannot reach the cookbook copy.
+  copy safe_versions_source, "#{project_dir}/safe_versions.rb"
 
   # we would like to do this 'bundle config set --local without development' but appbundler is insisting
   # on installing
