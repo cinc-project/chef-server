@@ -22,8 +22,14 @@ license_file "LICENSE"
 
 dependency "ruby"
 
+safe_versions_source = File.expand_path("#{project.files_path}/server-ctl-cookbooks/infra-server/libraries/safe_versions.rb")
+
 build do
   env = with_standard_compiler_flags(with_embedded_path)
+
+  # Stage the Gemfile's CVE floors next to it: the isolated project_dir the
+  # `source path:` fetcher builds in cannot reach the cookbook copy.
+  copy safe_versions_source, "#{project_dir}/safe_versions.rb"
 
   bundle "install --path=#{install_dir}/embedded/service/gem", env: env
 
