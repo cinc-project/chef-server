@@ -23,8 +23,12 @@ class PostgresqlPreflightValidator < PreflightValidator
   # actually required PG version.
   REQUIRED_VERSION  = PgVersion.new('9.6')
 
-  # supported PG version
+  # The PostgreSQL major we embed and test against.
   SUPPORTED_VERSION = PgVersion.new('13')
+
+  # Highest external PostgreSQL major accepted -- what has been tried, not a
+  # hard limit. Raise it as newer majors are validated.
+  MAX_SUPPORTED_VERSION = PgVersion.new('17')
 
   def run!
     warn_about_removed_attribute('checkpoint_segments')
@@ -189,15 +193,14 @@ class PostgresqlPreflightValidator < PreflightValidator
     r = connection.exec('SHOW server_version;')
     v = PgVersion.new /^([0-9\.]+)/.match(r.first['server_version']).to_a.first
 
-    # Note that we're looking for the same major, and using our minor as the minimum version
-    # This provides compatibility with external databases that use < 13 before we make use
-    # of any features available in > 9.6.
-
-    if v.major == REQUIRED_VERSION || v.major == SUPPORTED_VERSION
+    # 9.6 and the SUPPORTED_VERSION..MAX_SUPPORTED_VERSION range are clean;
+    # 10-12 work but are past upstream end of life, so they warn.
+    if v.major == REQUIRED_VERSION ||
+       v.major.between?(SUPPORTED_VERSION, MAX_SUPPORTED_VERSION)
       :ok
-    elsif v.major < REQUIRED_VERSION || v.major > SUPPORTED_VERSION
+    elsif v.major < REQUIRED_VERSION || v.major > MAX_SUPPORTED_VERSION
       fail_with err_CSPG014_bad_postgres_version(v)
-    elsif v.major < SUPPORTED_VERSION
+    else
       ChefServer::Warnings.warn err_unsupported_postgres_version(v)
     end
   end
@@ -317,7 +320,8 @@ EOM
 
   def err_CSPG014_bad_postgres_version(ver)
     <<~EOM
-      CSPG014: #{ChefUtils::Dist::Server::PRODUCT} currently requires PostgreSQL version #{REQUIRED_VERSION} or greater.
+      CSPG014: #{ChefUtils::Dist::Server::PRODUCT} currently requires PostgreSQL version #{REQUIRED_VERSION} or greater,
+               up to and including major version #{MAX_SUPPORTED_VERSION}.
                The database you have provided is running version #{ver}.
 
                See https://docs.chef.io/errors/#cspg014-incorrect-version
@@ -372,8 +376,10 @@ EOM
 
   def err_unsupported_postgres_version(ver)
     <<~EOM
-      Chef Server currently supports PostgreSQL version #{SUPPORTED_VERSION}.
-      The database you have provided is running version #{ver}.
+      #{ChefUtils::Dist::Server::PRODUCT} ships PostgreSQL version #{SUPPORTED_VERSION} and is tested against
+      external servers from #{SUPPORTED_VERSION} through #{MAX_SUPPORTED_VERSION}.
+      The database you have provided is running version #{ver}, which is past its
+      upstream end of life. It will be used, but please plan an upgrade.
 
       Please check the release notes at https://docs.chef.io/release_notes_server for details.
     EOM
