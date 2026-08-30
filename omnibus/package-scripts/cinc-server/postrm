@@ -6,11 +6,13 @@ if [[ "$1" = "abort-upgrade" ]]; then
     exit 0
 fi
 
-# rpm calls `postrm 0` if this is package removal; and `postrm 1` if this is an
-# upgrade.
-# So we want to execute the rm if we're NOT rhel-ish, OR the argument is correct.
+# Only remove the ctl symlinks on a real removal, never on an upgrade.
+# dpkg passes words ("remove"/"purge" on removal, "upgrade" on upgrade);
+# rpm passes a count ("0" on removal, "1" on upgrade). On rpm the old
+# package's %postun runs AFTER the new package's %post, so running these
+# rm's during an upgrade deletes the links the new package just created.
 # (See also: http://tickets.opscode.com/browse/CHEF-3022)
-if [[ ! ( -e /etc/redhat-release || -e /etc/system-release ) || "$1" == "0" ]]; then
+if [[ "$1" == "remove" || "$1" == "purge" || "$1" == "0" ]]; then
   rm -f /usr/bin/chef-server-ctl
   rm -f /usr/bin/cinc-server-ctl
   rm -f /usr/bin/private-chef-ctl
