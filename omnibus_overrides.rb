@@ -19,6 +19,9 @@ override :ruby, version: "3.1.7", openssl_gem: '3.2.0'  # stay on Ruby 3.1.x (om
 # nokogiri 1.19+ requires Ruby >= 3.2; pin to the latest 1.18.x (ruby >= 3.1.0)
 # until the Ruby bump. omnibus-software defaults to 1.19.4.
 override :nokogiri, version: "1.18.10"
+# redis 6.0.0 requires Ruby >= 3.2; pin the last 5.x, which is what
+# src/chef-server-ctl/Gemfile.lock resolves. omnibus-software defaults to 6.0.0.
+override "redis-gem", version: "5.4.1"
 
 # Embedded Chef Infra build — must match the chef gem in src/chef-server-ctl
 # (18.10.17); omnibus-software's :chef default floats to the latest cinc branch.
