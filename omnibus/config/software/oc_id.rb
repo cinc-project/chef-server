@@ -39,9 +39,15 @@ relative_path "oc-id"
 # with any change.  This was done mostly due to the lack of support
 # for nodejs on PPC64BE platforms.
 
+safe_versions_source = File.expand_path("#{project.files_path}/server-ctl-cookbooks/infra-server/libraries/safe_versions.rb")
+
 build do
   env = with_standard_compiler_flags(with_embedded_path)
   env['PATH'] = "#{env['PATH']}:#{install_dir}/embedded/nodejs/bin"
+
+  # Stage the Gemfile's CVE floors next to it: the isolated project_dir the
+  # `source path:` fetcher builds in cannot reach the cookbook copy.
+  copy safe_versions_source, "#{project_dir}/safe_versions.rb"
 
   # Create bundle directory if it doesn't exist
   mkdir ".bundle" unless File.exist?(".bundle")
