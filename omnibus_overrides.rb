@@ -47,6 +47,9 @@ override :haproxy, version: "3.0.25"
 # opensearch stays on the final 1.x release until the OpenSearch major
 # upgrade (omnibus-software defaults to 3.7.0, whose bundle layout differs):
 override :opensearch, version: "1.3.20"
+# OpenSearch 1.3.x calls System.setSecurityManager, which JDK 24+ always throws
+# on (JEP 486); stay on the 17 line 15.10.114 shipped. omnibus-software: 25.0.4+7.
+override "server-open-jre", version: "17.0.20+8"
 
 # perl_pg_driver (DBD::Pg) must build against the embedded PostgreSQL 13,
 # not omnibus-software's current-major postgresql definition:
