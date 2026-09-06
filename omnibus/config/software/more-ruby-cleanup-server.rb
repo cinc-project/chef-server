@@ -24,6 +24,10 @@ source path: "#{project.files_path}/#{name}"
 
 dependency "ruby"
 
+# Floors come from the same safe_versions.rb the service Gemfiles read, so the
+# cleanup below and those bundles cannot drift apart.
+load File.expand_path("#{project.files_path}/server-ctl-cookbooks/infra-server/libraries/safe_versions.rb")
+
 build do
   env = with_standard_compiler_flags(with_embedded_path)
 
@@ -65,4 +69,9 @@ build do
   # without an explicit cwd these steps die with Dir.chdir ENOENT.
   gem "uninstall net-imap --all --executables --ignore-dependencies", env: env, cwd: install_dir
   gem "install net-imap --version 0.5.15 --no-document", env: env, cwd: install_dir
+
+  # rexml lands twice: the copy the bundles resolve at the floor, plus an older
+  # orphan no lockfile or appbundled binstub references. Drop anything below it.
+  gem "uninstall rexml --version '<#{SafeVersions::MINIMUM_SAFE_REXML_VERSION}' " \
+      "--ignore-dependencies --executables", env: env, cwd: install_dir
 end
