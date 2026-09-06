@@ -5,7 +5,7 @@
 # Only deliberate pins remain here; every other component now falls through to
 # the omnibus-software default (latest). Removed (now using omnibus-software
 # defaults): omnibus-ctl, ohai, logrotate (3.22.0), libffi (3.6.0, >= the 3.4.7
-# EL10 fix), runit (2.3.1), gecode (6.2.0, unchanged), perl (5.42.2),
+# EL10 fix), runit (2.3.1), perl (5.42.2),
 # openresty (1.31.1.1), sqitch (1.6.1).
 #
 # The generic software definitions this repo used to carry locally (haproxy,
@@ -22,6 +22,10 @@ override :nokogiri, version: "1.18.10"
 # redis 6.0.0 requires Ruby >= 3.2; pin the last 5.x, which is what
 # src/chef-server-ctl/Gemfile.lock resolves. omnibus-software defaults to 6.0.0.
 override "redis-gem", version: "5.4.1"
+# gecode 6.4.0 adds flatzinc/blackbox-backend.cpp, which needs the C++17
+# <charconv> header openSUSE Leap 15's compiler predates. 6.3.0 is what
+# 15.10.114 shipped. omnibus-software defaults to 6.4.0.
+override "gecode", version: "6.3.0"
 
 # Embedded Chef Infra build — must match the chef gem in src/chef-server-ctl
 # (18.10.17); omnibus-software's :chef default floats to the latest cinc branch.
