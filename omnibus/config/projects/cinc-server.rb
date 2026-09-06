@@ -42,6 +42,10 @@ dependency "preparation"
 dependency "server-complete"
 
 # THESE MUST BE LAST DO NOT MOVE
+# shebang-cleanup rewrites "#!/usr/bin/env ruby" binstubs under embedded/bin to
+# point at the embedded interpreter, so it has to run once everything else is
+# installed.
+dependency "shebang-cleanup"
 dependency "ruby-cleanup"
 dependency "cleanup"
 
