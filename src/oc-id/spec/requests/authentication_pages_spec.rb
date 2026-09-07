@@ -11,7 +11,11 @@ describe 'Authentication' do
     it { should have_field 'password' }
     it { should have_button 'Sign In' }
     it { should have_link 'Forgot your password?' }
-    it { should have_link 'Sign Up' }
+
+    # There is no self-service signup on a Cinc Server: accounts are created
+    # by an administrator with cinc-server-ctl. The link used to be here and
+    # went to Progress's commercial signup page.
+    it { should_not have_link 'Sign Up' }
 
     describe 'success' do
       let(:user) { FactoryBot.build(:user) }
@@ -30,7 +34,7 @@ describe 'Authentication' do
       describe 'and then sign out' do
         before { click_link 'Sign Out' }
         it { should have_button 'Sign In' }
-        it { should have_link 'Sign Up' }
+        it { should_not have_link 'Sign Up' }
         it { should have_link 'Forgot your password?' }
       end
     end
@@ -52,7 +56,7 @@ describe 'Authentication' do
       describe 'and then sign out' do
         before { click_link 'Sign Out' }
         it { should have_button 'Sign In' }
-        it { should have_link 'Sign Up' }
+        it { should_not have_link 'Sign Up' }
         it { should have_link 'Forgot your password?' }
       end
     end
@@ -67,13 +71,13 @@ describe 'Authentication' do
       end
 
       it { should have_link 'Forgot your password?' }
-      it { should have_link 'Sign Up' }
+      it { should_not have_link 'Sign Up' }
       it { should_not have_link 'Sign Out', :href => signout_path }
       it { should have_button 'Sign In' }
       it { should have_selector('.alert-box.alert') }
 
       describe 'and then visiting another page' do
-        before { find(:css, '.logo').click }
+        before { find(:css, '.brand').click }
         it { should_not have_selector('.alert-box.alert') }
       end
     end
