@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chef Identity Service</title>
+  <title>Cinc Server Identity</title>
   <%= stylesheet_link_tag "application", media: "all" %>
   <%= javascript_include_tag '//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js' %>
   <%= csrf_meta_tags %>
@@ -16,7 +16,10 @@
       <ul class="title-area">
         <li class="name">
           <h1>
-            <%= chef_logo(:a, :href => root_path, :class => 'logo').html_safe %>
+            <%= link_to root_path, :class => 'brand' do %>
+              <%= image_tag 'cinc-logo.png', :alt => '', :class => 'brand-mark' %>
+              <span>Cinc Server</span>
+            <% end %>
           </h1>
         </li>
         <li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
@@ -30,8 +33,6 @@
             <% end %>
             <li><%= link_to 'Authorized Applications', oauth_authorized_applications_path %></li>
             <li><%= link_to "Sign Out", signout_path, method: "delete" %></li>
-          <% elsif controller.controller_name == 'sessions' %>
-            <li><%= link_to "Sign Up", chef_sign_up_url, :target => "_blank" %></li>
           <% else %>
             <li><%= link_to "Sign In", signin_path %></li>
           <% end %>
@@ -50,9 +51,11 @@
   </div>
   <footer>
     <center>
-      <a href="https://www.progress.com/legal/privacy-policy">Privacy Policy</a> | <a href="https://www.progress.com/legal/cookie-policy">Cookie Policy</a>
+      Cinc Server, a community distribution built by the
+      <a href="https://cinc.sh">Cinc Project</a> from Apache-2.0 source.
       <br>
-      &copy; <%= Time.now.year %> Chef Software, Inc.
+      Chef and the Chef logo are trademarks of their owner; the Cinc Project
+      is not affiliated with or endorsed by them.
     </center>
   </footer>
   <%= javascript_include_tag "application" %>

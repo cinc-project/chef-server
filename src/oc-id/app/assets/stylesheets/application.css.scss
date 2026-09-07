@@ -18,3 +18,18 @@ form.button_to {
   display: inline;
   margin: 0
 }
+
+// The masthead: the Cinc mark beside the product name. This replaces a logo
+// that was fetched and injected by a script; it is a plain image now, so it
+// renders with scripting off and cannot go looking for an asset that is gone.
+.top-bar .name .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.75rem;
+
+  .brand-mark {
+    height: 1.7rem;
+    width: auto;
+  }
+}
