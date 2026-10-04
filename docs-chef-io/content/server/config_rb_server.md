@@ -56,10 +56,6 @@ file (no equal sign is necessary to set the value):
 
     Default value: `"ipv4"`.
 
-`notification_email`
-
-:   Default value: `info@example.com`.
-
 ### NGINX SSL Protocols
 
 {{< readfile file="content/server/reusable/md/server_tuning_nginx.md" >}}
