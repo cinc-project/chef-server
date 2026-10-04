@@ -96,10 +96,11 @@ This configuration file has the following general settings:
 
 `from_email`
 
-:   The email address from which invitations to the Chef management
-    console are sent.
+:   The email address from which the identity service (oc-id) sends
+    password-reset and email-verification mail. Set this to an address in
+    a domain you control.
 
-    Default value: `'"Opscode" <donotreply@chef.io>'`.
+    Default value: `'"Cinc Server" <donotreply@example.com>'`.
 
 `license['nodes']`
 
@@ -113,12 +114,6 @@ This configuration file has the following general settings:
     of nodes licensed for an organization.
 
     Default value: `'https://www.chef.io/pricing'`.
-
-`notification_email`
-
-:   The email addressed to which email notifications are sent.
-
-    Default value: `'pc-default@chef.io'`.
 
 `role`
 

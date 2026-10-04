@@ -79,10 +79,6 @@ file (no equal sign is necessary to set the value):
     configuration, be sure to set the netmask on the IPv6 `backend_vip`
     attribute. Default value: `"ipv4"`.
 
-`notification_email`
-
-:   Default value: `info@example.com`.
-
 ### SSL Protocols
 
 {{< readfile file="content/server/reusable/md/server_tuning_nginx.md" >}}
