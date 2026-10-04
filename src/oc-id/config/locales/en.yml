@@ -23,7 +23,7 @@ en:
   doorkeeper:
     authorized_applications:
       index:
-        no_applications_message: You have not granted any applications access to your Chef account.
+        no_applications_message: You have not granted any applications access to your Cinc Server account.
   errors:
     passwords:
       blank: "%{label} must not be blank."
@@ -44,7 +44,7 @@ en:
       invalid_username: "'%{name}' is not a valid username."
   password_resets:
     new:
-      form_caption: Enter your Chef username and we'll send you a link to reset it.
+      form_caption: Enter your Cinc Server username and we'll send you a link to reset it.
   profile:
     update_successful: "Profile updated successfully."
     password_changed: "Password changed."
