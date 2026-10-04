@@ -81,7 +81,6 @@ module PrivateChef
   api_fqdn nil
   node nil
 
-  notification_email nil
   from_email nil
   role nil
   user Mash.new
@@ -257,7 +256,6 @@ module PrivateChef
       #
       set_target_array_if_not_nil(results['private_chef'], 'default_orgname', PrivateChef['default_orgname'])
       set_target_array_if_not_nil(results['private_chef'], 'oc-chef-pedant', PrivateChef['oc_chef_pedant'])
-      set_target_array_if_not_nil(results['private_chef'], 'notification_email', PrivateChef['notification_email'])
       set_target_array_if_not_nil(results['private_chef'], 'from_email', PrivateChef['from_email'])
       set_target_array_if_not_nil(results['private_chef'], 'fips_enabled', PrivateChef['fips'])
       set_target_array_if_not_nil(results['private_chef'], 'role', PrivateChef['role'])

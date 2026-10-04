@@ -42,8 +42,9 @@ default['private_chef']['api_version'] = '12.0.0'
 default['private_chef']['flavor'] = 'cs'
 default['private_chef']['install_path'] = opt_base
 
-default['private_chef']['notification_email'] = 'pc-default@chef.io'
-default['private_chef']['from_email'] = '"Opscode" <donotreply@chef.io>'
+# The From on oc_id's password-reset and verification mail; operators should set it,
+# since mail claiming a domain they do not control is dropped by DMARC.
+default['private_chef']['from_email'] = '"Cinc Server" <donotreply@example.com>'
 default['private_chef']['role'] = 'standalone'
 default['private_chef']['license']['nodes'] = 25
 default['private_chef']['license']['upgrade_url'] = 'https://www.chef.io/pricing'

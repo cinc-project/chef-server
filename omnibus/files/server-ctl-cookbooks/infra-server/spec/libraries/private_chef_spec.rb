@@ -130,6 +130,25 @@ EOF
     end
   end
 
+  context 'when an existing configuration still sets notification_email' do
+    let(:config) do
+      <<~EOF
+        notification_email 'ops@example.com'
+        from_email '"Ops" <ops@example.com>'
+      EOF
+    end
+
+    it 'still parses, and the setting no longer reaches the generated config' do
+      rendered_config = config_for('api.chef.io')
+      expect(rendered_config['private_chef']).to_not have_key('notification_email')
+    end
+
+    it 'still passes from_email through' do
+      rendered_config = config_for('api.chef.io')
+      expect(rendered_config['private_chef']['from_email']).to eq('"Ops" <ops@example.com>')
+    end
+  end
+
   context 'when given types that need to be converted' do
     let(:config) do
       <<~EOF
