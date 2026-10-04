@@ -4,8 +4,10 @@ chef:
 doorkeeper:
   administrators:
     - rainbowdash
-email_from_address: 'Chef Notifications <notifications@chef.io>'
+email_from_address: 'Cinc Server <donotreply@example.com>'
 protocol: https
 secret_key_base: CHANGE ME
 zendesk:
-  subdomain: getchef
+  # Set both this and zendesk.shared_secret to enable Zendesk SSO. It was
+  # 'getchef', which is not a support portal this project has.
+  subdomain:
