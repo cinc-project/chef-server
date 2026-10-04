@@ -413,18 +413,18 @@ vault | 0.18.2 | MPL-2.0
 TermReadKey | 2.38 | Public Domain 
 postgresql13 | 13.23 | PostgreSQL
 postgresql96-bin | 9.6.24 | PostgreSQL
-chef-server-ctl |  | Proprietary
-cleanup | 1.0.0 | Proprietary
-gpg-key | 1.0.1 | Proprietary
-more-ruby-cleanup-server |  | Proprietary
-partybus |  | Proprietary
-patchelf | 0.13.1 | Proprietary
-preparation | 1.0.0 | Proprietary
-private-chef-scripts |  | Proprietary
-private-chef-upgrades |  | Proprietary
-ruby-cleanup | 1.0.0 | Proprietary
-server-complete |  | Proprietary
-server-ctl-cookbooks |  | Proprietary
+chef-server-ctl |  | Apache-2.0
+cleanup | 1.0.0 | Apache-2.0
+gpg-key | 1.0.1 | Apache-2.0
+more-ruby-cleanup-server |  | Apache-2.0
+partybus |  | Apache-2.0
+patchelf | 0.19.1 | GPL-3.0
+preparation | 1.0.0 | Apache-2.0
+private-chef-scripts |  | Apache-2.0
+private-chef-upgrades |  | Apache-2.0
+ruby-cleanup | 1.0.0 | Apache-2.0
+server-complete |  | Apache-2.0
+server-ctl-cookbooks |  | Apache-2.0
 ruby-shadow | 2.5.0 | Public Domain 
 liblzma | 5.2.10 | Public-Domain
 net-http-spy | 0.2.1 | Public-Domain
@@ -5675,16 +5675,6 @@ Copyright notice:
 If you use the zlib library in a product, we would appreciate *not* receiving lengthy legal documents to sign.  The sources are provided for free but without warranty of any kind.  The library has been entirely written by Jean-loup Gailly and Mark Adler; it does not include third-party code.  We make all contributions to and distributions of this project solely in our personal capacity, and are not conveying any rights to any intellectual property of any third parties.
 
 If you redistribute modified sources, we would appreciate that you include in the file ChangeLog history information documenting your changes.  Please read the FAQ for more information on the distribution of modified source versions.
-
-2.	Special Notices Regarding Commercially Licensed Third-Party Components incorporated into the Product: 
-
-Progress Chef Infra Server v15 incorporates OpenSearch 1.3.20 licensed from TuxCare.
-Progress Chef Infra Server v15 incorporates PostgreSQL 13.22 licensed from TuxCare.
-
-3.	Special Notices Regarding Progress Product Components incorporated into the Product:
-
-Progress Chef Infra Server v15 incorporates chef-server-ctl, cleanup v1.0.0, gpg-key v1.0.1, more-ruby-cleanup-server, partybus, patchelf v0.13.1, preparation v1.0.0, private-chef-scripts, private-chef-upgrades, 
-ruby-cleanup v1.0.0, server-complete, and server-ctl-cookbooks from Progress Software Corporation.	
 
 
 NOTICE FROM PROGRESS SOFTWARE CORPORATION: Additional notices may be included in the release notes or other documentation that accompanies updates received in connection with support of the Product.
