@@ -20,14 +20,14 @@ class Chef
           require 'compass'
           Sass.load_paths << Compass::Frameworks['compass'].stylesheets_directory
 
+          # .ai and .pptx were here for a tree of Illustrator sources that no
+          # longer ships; nothing serves design artwork out of a Rails app.
           app.config.assets.precompile += %w(
             *.png
             *.svg
             *.eot
             *.ttf
             *.woff
-            *.ai
-            *.pptx
           )
         end
       end
