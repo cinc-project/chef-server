@@ -96,7 +96,11 @@ gem "rest-client", git: "https://github.com/chef/rest-client", branch: "jfm/ucrt
 
 gem "toml" # for habitat-land
 
-gem "knife-ec-backup", "~> 3.0.5"
+# Both sources carry 3.0.9; only the Cinc build reads the server's paths from
+# chef-utils instead of hardcoding /etc/opscode, so pin it rather than leave it to chance.
+source "https://rubygems.cinc.sh" do
+  gem "knife-ec-backup", "~> 3.0.5"
+end
 
 gem "public_suffix", "< 7.0" # public_suffix 7.0+ requires Ruby >= 3.2; pin for Ruby 3.1 compatibility
 
