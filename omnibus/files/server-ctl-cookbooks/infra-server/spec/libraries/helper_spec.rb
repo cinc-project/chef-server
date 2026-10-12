@@ -43,6 +43,90 @@ describe OmnibusHelper do
     end
   end
 
+  describe 'erchef bookshelf URLs' do
+    let(:bookshelf) do
+      {
+        'enable' => true,
+        'vip' => 'chef.example.com',
+        'vip_port' => 443,
+        'listen' => '127.0.0.1',
+        'port' => 4321,
+        'external_url' => :host_header,
+      }
+    end
+    let(:erchef) { { 's3_url_type' => nil } }
+    let(:fips) { false }
+    let(:node) do
+      {
+        'private_chef' => {
+          'fips_enabled' => fips,
+          'nginx' => { 'x_forwarded_proto' => 'https' },
+          'bookshelf' => bookshelf,
+          'opscode-erchef' => erchef,
+        },
+      }
+    end
+    let(:helper) { described_class.new(node) }
+
+    context 'on a standalone server (bookshelf here, host_header URLs)' do
+      it 'uses path-style URLs' do
+        expect(helper.erchef_s3_url_type).to eq('path')
+      end
+
+      it 'reaches bookshelf directly instead of through nginx' do
+        expect(helper.erchef_s3_url).to eq('http://127.0.0.1:4321')
+      end
+    end
+
+    context 'when bookshelf listens on a wildcard address' do
+      it 'reaches an IPv4 wildcard through loopback' do
+        bookshelf['listen'] = '0.0.0.0'
+        expect(helper.erchef_s3_url).to eq('http://127.0.0.1:4321')
+      end
+
+      it 'reaches an IPv6 wildcard through loopback' do
+        bookshelf['listen'] = '::'
+        expect(helper.erchef_s3_url).to eq('http://[::1]:4321')
+      end
+
+      it 'brackets an IPv6 listen address' do
+        bookshelf['listen'] = '::1'
+        expect(helper.erchef_s3_url).to eq('http://[::1]:4321')
+      end
+    end
+
+    context 'on a tier frontend or with external S3 (bookshelf not here)' do
+      it 'keeps the public URL' do
+        bookshelf['enable'] = false
+        expect(helper.erchef_s3_url).to eq('https://chef.example.com')
+      end
+    end
+
+    context 'with a configured external URL' do
+      before { bookshelf['external_url'] = 'https://s3.example.com' }
+
+      it 'defaults to vhost-style URLs and keeps the public URL' do
+        expect(helper.erchef_s3_url_type).to eq('vhost')
+        expect(helper.erchef_s3_url).to eq('https://chef.example.com')
+      end
+
+      it 'goes direct when s3_url_type asks for path-style URLs' do
+        erchef['s3_url_type'] = 'path'
+        expect(helper.erchef_s3_url_type).to eq('path')
+        expect(helper.erchef_s3_url).to eq('http://127.0.0.1:4321')
+      end
+    end
+
+    context 'in FIPS mode' do
+      let(:fips) { true }
+
+      it 'always reaches bookshelf directly' do
+        bookshelf['external_url'] = 'https://s3.example.com'
+        expect(helper.erchef_s3_url).to eq('http://127.0.0.1:4321')
+      end
+    end
+  end
+
   describe 'escape_characters_in_string' do
     subject(:helper) { described_class.escape_characters_in_string(input_string) }
     let(:input_string) { "foo'" }
