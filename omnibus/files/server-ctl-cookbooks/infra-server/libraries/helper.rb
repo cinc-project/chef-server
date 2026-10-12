@@ -393,6 +393,41 @@ class OmnibusHelper
     URI("#{node['private_chef']['nginx']['x_forwarded_proto']}://#{vip_for_uri('bookshelf')}:#{node['private_chef']['bookshelf']['vip_port']}").to_s
   end
 
+  # Bookshelf's own listener, for erchef on the same node. A wildcard listen
+  # address is reached through loopback.
+  def bookshelf_internal_url
+    host = case node['private_chef']['bookshelf']['listen']
+           when '0.0.0.0' then '127.0.0.1'
+           when '::', '[::]' then '::1'
+           else node['private_chef']['bookshelf']['listen']
+           end
+    "http://#{normalize_host(host)}:#{node['private_chef']['bookshelf']['port']}"
+  end
+
+  # Path-style unless erchef presigns for a configured external URL, where it
+  # defaults to vhost (S3) unless s3_url_type says otherwise.
+  def erchef_s3_url_type
+    if erl_atom_or_string(node['private_chef']['bookshelf']['external_url']).to_s == 'host_header'
+      'path'
+    else
+      (node['private_chef']['opscode-erchef']['s3_url_type'] || 'vhost').to_s
+    end
+  end
+
+  # erchef talks to a bookshelf on this node directly rather than out through
+  # the public hostname and nginx: that hop skipped certificate checks and broke
+  # wherever the name does not route back here. chef_s3 shares one URL type for
+  # its own and presigned URLs, and vhost-style buckets cannot sit on loopback,
+  # so vhost setups (and frontends, external S3) keep the public URL.
+  def erchef_s3_url
+    local = node['private_chef']['bookshelf']['enable'] && erchef_s3_url_type == 'path'
+    if node['private_chef']['fips_enabled'] || local
+      bookshelf_internal_url
+    else
+      bookshelf_s3_url
+    end
+  end
+
   def nginx_ssl_url
     # Using URI#to_s to strip ":443" for https and ":80" for http
     URI("#{node['private_chef']['nginx']['url']}:#{node['private_chef']['nginx']['ssl_port']}").to_s
