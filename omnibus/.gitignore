@@ -1,0 +1,11 @@
+.bundle/
+.kitchen/
+.vagrant/
+bin/*
+files/server-ctl-cookbooks/cache/
+pkg/*
+vendor/
+tests/**/*.so
+
+.kitchen.local.yml
+Gemfile.lock

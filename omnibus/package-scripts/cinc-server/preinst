@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+# Perform necessary chef-server setup steps after package is installed.
+#
+
+PROGNAME=$(basename $0)
+
+function error_exit
+{
+    echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
+    exit 1
+}
+
+warn_about_search_reindex() {
+    # If this is a fresh install, we don't need to worry about the
+    # solr migration
+    if [ ! -e /etc/cinc-project/cinc-server-running.json ]; then
+        return
+    fi
+
+    if [ -d /opt/cinc-project/sv/opscode-solr4 ]; then
+        echo "############################ NOTICE ##################################"
+        echo ""
+        echo "It appears that this Cinc Server has Solr enabled."
+        echo ""
+        echo "By default, Cinc Server now uses Elasticsearch. To migrate to elasticsearch"
+        echo "requires a full data reindex."
+        echo ""
+        echo "The reindex can take a long time if you have a large amount of data. Your Cinc Server"
+        echo "will be down for the duration of the reindex."
+        echo ""
+        echo "We recommend taking a full backup before proceeding."
+        echo ""
+        echo "See https://docs.chef.io/server/upgrades/ for additional information on backups and upgrading."
+        echo ""
+        echo "############################ NOTICE ##################################"
+    fi
+}
+
+warn_about_search_reindex
+exit 0
