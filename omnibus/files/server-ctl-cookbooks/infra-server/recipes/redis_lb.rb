@@ -124,12 +124,46 @@ ruby_block 'set_lb_redis_values' do
                       port: redis_data['port'].to_i,
                       username: 'default',
                       password: PrivateChef.credentials.get('redis_lb', 'password').to_s)
+    xdl = node['private_chef']['lb']['xdl_defaults']
+    xmaint_allowed_ips_list = node['private_chef']['lb']['xmaint_allowed_ips_list']
+    banned_ips = PrivateChef['banned_ips']
+    # An earlier version stored these names as JSON strings, which makes every
+    # set command on them fail; drop them so they come back as the right types.
+    redis.del('xmaint_allowed_ips_list', 'xdl_defaults')
+    # Ensure there is no stale data, but first institute
+    # a brief maint mode to avoid potential misrouting when
+    # we delete old keys.
+    redis.hset 'dl_default', '503_mode', 'true'
+    next until redis.spop('banned_ips').nil?
+    keys = redis.hkeys 'dl_default'
 
-    # Convert all values to strings to avoid type issues
-    xdl = node['private_chef']['lb']['xdl_defaults'].map { |k, v| [k, v.to_s] }.to_h
-    xmaint_allowed_ips_list = node['private_chef']['lb']['xmaint_allowed_ips_list'].map(&:to_s)
+    # Clear all dl_default keys except for the 503 mode we just set.
+    redis.pipelined do |pipeline|
+      keys.each do |key|
+        pipeline.hdel 'dl_default', key unless key == '503_mode'
+      end
+    end
 
-    redis.set('xdl_defaults', xdl.to_json)
-    redis.set('xmaint_allowed_ips_list', xmaint_allowed_ips_list.to_json)
+    redis.pipelined do |pipeline|
+      # Now we're clear to repopulate from configuration.
+      banned_ips&.each do |ip|
+        pipeline.sadd 'banned_ips', ip.to_s
+      end
+      xmaint_allowed_ips_list&.each do |ip|
+        pipeline.sadd 'xmaint_allowed_ips_list', ip.to_s
+      end
+      # Note that we'll preserve 503 mode until everything is
+      # populated.
+      xdl&.each do |key, value|
+        pipeline.hset('dl_default', key, value.to_s) unless key == '503_mode'
+      end
+    end
+
+    if xdl&.key?('503_mode')
+      redis.hset 'dl_default', '503_mode', xdl['503_mode'].to_s
+    else
+      redis.hdel 'dl_default', '503_mode'
+    end
   end
+  action :run
 end
