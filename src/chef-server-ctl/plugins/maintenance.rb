@@ -7,13 +7,13 @@ def redis
                vip = running_config["private_chef"]["redis_lb"]["vip"]
                port = running_config["private_chef"]["redis_lb"]["port"]
                password = credentials.get("redis_lb", "password")
-               Redis.new(port: port, ip: vip, username: 'default', password: password)
+               Redis.new(port: port, host: vip, username: 'default', password: password)
              end
 end
 
 def enable_maintenance
   puts "- Enabling maintenance mode"
-  redis.hset("dl_default", "503_mode", true)
+  redis.hset("dl_default", "503_mode", "true")
 end
 
 def disable_maintenance
