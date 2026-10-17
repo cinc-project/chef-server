@@ -34,4 +34,40 @@ describe "chef-server-ctl maintenance" do
     end
   end
 
+  context "when talking to redis" do
+    let(:redis) { double("Redis") }
+
+    before do
+      allow(veil_creds).to receive(:get).with("redis_lb", "password").and_return("secret")
+      allow(Redis).to receive(:new)
+        .with(port: "16379", host: "127.0.0.1", username: "default", password: "secret")
+        .and_return(redis)
+    end
+
+    it "enables maintenance mode with a string value" do
+      expect(redis).to receive(:hset).with("dl_default", "503_mode", "true")
+      @helper.run_test_omnibus_command(command, ["on"])
+    end
+
+    it "disables maintenance mode" do
+      expect(redis).to receive(:hdel).with("dl_default", "503_mode")
+      @helper.run_test_omnibus_command(command, ["off"])
+    end
+
+    it "adds an IP to the allowed set" do
+      expect(redis).to receive(:sadd).with("xmaint_allowed_ips_list", "192.0.2.10")
+      @helper.run_test_omnibus_command(command, ["-a", "192.0.2.10"])
+    end
+
+    it "removes an IP from the allowed set" do
+      expect(redis).to receive(:srem).with("xmaint_allowed_ips_list", "192.0.2.10")
+      @helper.run_test_omnibus_command(command, ["-r", "192.0.2.10"])
+    end
+
+    it "lists the allowed set" do
+      expect(redis).to receive(:smembers).with("xmaint_allowed_ips_list").and_return(["127.0.0.1"])
+      @helper.run_test_omnibus_command(command, ["-l"])
+    end
+  end
+
 end
