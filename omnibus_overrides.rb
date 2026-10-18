@@ -35,11 +35,11 @@ override "gecode", version: "6.3.0"
 override :chef, version: "stable/cinc-v18.10.17-cinc-server"
 
 # FIPS-validated OpenSSL pin (omnibus-software defaults to 3.6.3, no FIPS).
-# fips_version must match the source tree the openssl-fips-provider definition
-# stages (3.0.9, the FIPS-validated module Cinc ships everywhere -- upstream's
-# 3.1.2 lives in their private omnibus-software). The FIPS build itself is
+# fips_version names the FIPS-validated provider: 3.1.2 is the FIPS 140-3
+# module (CMVP certificate #4985). The openssl-fips-provider definition follows
+# this override from omnibus-software 26.10.35. The FIPS build itself is
 # gated by OMNIBUS_FIPS_MODE in the build repo's CI, not by an override key.
-override :openssl, version: "3.2.6", fips_version: "3.0.9"
+override :openssl, version: "3.2.6", fips_version: "3.1.2"
 
 # redis kept pinned (major 5 -> 8 jump deferred pending testing):
 override :redis, version: "5.0.14"       # omnibus-software: 8.8.0 (major 5 -> 8) -- kept pinned
