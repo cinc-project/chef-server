@@ -1,9 +1,20 @@
+# Strict FIPS for processes started with OPENSSL_CONF pointing here (nginx in
+# FIPS mode): only the FIPS and base providers, and fail if they can't load.
+config_diagnostics = 1
+openssl_conf = openssl_init
+
+.include /opt/cinc-project/embedded/ssl/fipsmodule.cnf
+
 [openssl_init]
 providers = provider_sect
+alg_section = algorithm_sect
 
 [provider_sect]
 fips = fips_sect
-default = default_sect
+base = base_sect
 
-[fips_sect]
+[base_sect]
 activate = 1
+
+[algorithm_sect]
+default_properties = fips=yes
