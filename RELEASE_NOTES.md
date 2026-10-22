@@ -4,7 +4,10 @@ Cinc Server 15.x is built from Chef Infra Server. For changes that came from
 upstream, see the [Chef Infra Server Release Notes](https://docs.chef.io/release_notes/server/).
 This file lists what Cinc Server changes on top.
 
-## Unreleased
+## 15.10.127
+
+Based on Chef Infra Server 15.10.127. It carries Cinc fixes that Progress's
+15.10.127 doesn't have, starting with the license fix below.
 
 ### Action required: set `from_email`
 
