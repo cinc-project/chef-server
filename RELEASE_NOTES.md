@@ -23,6 +23,12 @@ then run `cinc-server-ctl reconfigure`.
 
 ### Fixes
 
+- The server no longer stops answering 90 days after install. Without a
+  Progress license, Chef Infra Server 15.10.102 and later refuse every request
+  with a 403 "license expired" once 90 days have passed; Cinc Server now
+  reports a license that never expires and no longer runs the Chef Automate
+  license command or reads `/tmp/lic`
+  ([#48](https://gitlab.com/cinc-project/distribution/server/-/issues/48)).
 - `knife ec backup` and `knife ec restore` now find the server's
   configuration under `/etc/cinc-project` instead of failing on Chef Server's
   `/etc/opscode` paths

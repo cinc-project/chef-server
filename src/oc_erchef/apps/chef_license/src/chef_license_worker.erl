@@ -1,3 +1,5 @@
+%% Copyright (c) 2026 Cinc Project
+
 -module(chef_license_worker).
 
 -behaviour(gen_server).
@@ -33,23 +35,14 @@
 }).
 
 -define(DEFAULT_LICENSE_SCAN_INTERVAL, 30000). %milli seconds
--define(DEFAULT_FILE_PATH, "/tmp/lic").
--define(LICENSE_SCAN_CMD, "chef-automate license status --result-json ").
+%% Cinc ships without a Progress license, so the license it reports never expires.
+-define(NEVER_EXPIRES, 253402300799). % 9999-12-31T23:59:59Z
 
 
-%% Valid options: cli, or a path to a file
-%% Note that this is defaulted to cli in erl_opts in rebar.config.script but can be overridden
-%% with the path at build time by setting OC_LICENSE_PATH=<path> in the environment.
-%% (In that case, path should be something like /var/opt/opscode/license.lic)
+%% rebar.config.script still defines OC_LICENSE_PATH, but get_license_info/2 ignores it.
 -ifndef(OC_LICENSE_PATH).
 -define(OC_LICENSE_PATH, cli).
 -endif.
-
-%% These functions are conditionally reachable depending on the OC_LICENSE_PATH macro value.
-%% When OC_LICENSE_PATH is 'cli' (default), the file-based path functions are not called,
-%% but they are needed when OC_LICENSE_PATH is set to a file path at build time.
--dialyzer({no_match, [get_license_info/2, make_license_payload/2]}).
--dialyzer({no_unused, [load_local_license/2, decode_json_payload/2]}).
 
 %%% ======================================
 %%% Exported
@@ -111,100 +104,15 @@ install_time() ->
     {error, _Reason} -> DefaultTime
   end.
 
-% This will continue to be the default behavior - license will only be checked
-% as part of an automate install, when the automate CLI is present.
-get_license_info(InstallTime, cli) ->
-  os:cmd(?LICENSE_SCAN_CMD ++ ?DEFAULT_FILE_PATH),
-  case file:read_file(?DEFAULT_FILE_PATH) of
-    {ok, Bin} ->
-      case catch jiffy:decode(Bin) of
-        {Json} -> Json;
-        _ ->
-          lager:warning("CLI license check returned invalid JSON, falling back to default license"),
-          make_license_payload(InstallTime, #{})
-      end;
-    {error, Reason} ->
-      lager:debug("CLI license file not found (~p), falling back to default license", [Reason]),
-      make_license_payload(InstallTime, #{})
-  end;
-% This is for the file-based license mode, where we read the license directly from a file path.
-get_license_info(InstallTime, Path) ->
-  case load_local_license(InstallTime, Path) of
-    {ok, Json} ->
-      lager:debug("Loaded local license data: ~p", [Json]),
-      Json;
-    {error, Reason} ->
-      lager:warning("Failed to load local license, falling back to default: ~p", [Reason]),
-      make_license_payload(InstallTime, #{})
-  end.
+%% Cinc doesn't run the automate CLI or read a license file, whatever OC_LICENSE_PATH says.
+get_license_info(InstallTime, _ModeOrPath) ->
+  make_license_payload(InstallTime, #{}).
 
-load_local_license(InstallTime, Loader) when is_function(Loader) ->
-  case Loader() of
-    {ok, Bin} ->
-      %% Input format is the dotted three-part JWT style base64url encoded string, so
-      %% we start by splitting on dot and ensuring we get the expected three parts
-      case binary:split(Bin, [<<".">>], [trim_all, global]) of
-        %% NOTE: This implementation does not verify signature. To implement signature verification,
-        %%       we will need to have the license service public key available to the license worker
-        %%       at a known path.
-        [_Header, Payload, _Signature] ->
-          try base64:decode(Payload, #{ padding => false, mode => urlsafe } ) of
-            Decoded ->
-              decode_json_payload(InstallTime, Decoded)
-          catch _:Reason ->
-            { error, { invalid_base64, Reason } }
-          end;
-        _ ->
-          { error, { invalid_license_format } }
-      end;
-    {error, Reason} ->
-      { error, { load_failed, Reason } }
-  end;
-load_local_license(InstallTime, Path) ->
-  load_local_license( InstallTime, fun() -> file:read_file(Path) end ).
-
-decode_json_payload(InstallTime, Decoded) ->
-  try jiffy:decode(Decoded, [return_maps]) of
-    J -> {ok, make_license_payload(InstallTime, J)}
-  catch _:Reason ->
-    { error, {invalid_json, Reason } }
-  end.
-
-
-%% Generates a license payload using a parsed license.  The generated license is 's compatiable with the
-%% automate-ctl license status json output object, so that we can use the same processing function for both
-%% the CLI and file-based license modes.
-%% In some cases, we don't have all the data that the license service would provide, so we'll make substitutes.
-make_license_payload(_InstallTime, #{ <<"id">> := LicenseId,
-                                      <<"customer">> := CustomerName,
-                                      <<"entitlements">> := Entitlements,
-                                      <<"type">> := LicenseType
-                                    }) ->
-
-  %% The license server itself would give us actual expiration date. We have to
-  %% approximate as best we can based the latest end date of available entitilements.
-  ExpireInSeconds = case Entitlements of
-                      [] ->  0;  % No entitlements, treat as expired or invalid license
-                      _ -> lists:max([Ent || #{ <<"end">> := #{<<"seconds">> := Ent}} <- Entitlements])
-                    end,
-
-  [ {<<"result">>, {[
-                    {<<"license_id">>, LicenseId},
-                    {<<"customer_name">>, CustomerName},
-                    {<<"expiration_date">>, {[{<<"seconds">>, ExpireInSeconds}]}},
-                    {<<"license_type">>, LicenseType},
-                    {<<"grace_period">>, false}
-                   ]}}
-    ];
-make_license_payload(InstallTime, _Other) ->
-  %% If we don't have the expected fields, we don't have a valid license - so let's make something that looks like one,
-  %% but is valid from the install date + 90 days.
-  ExpirationTime = InstallTime + (60 * 60 * 24 * 90), % 90 days from install time
-  lager:debug("License payload is missing expected fields, treating as valid license with expiration : ~p", [ExpirationTime]),
+make_license_payload(_InstallTime, _Other) ->
   [ {<<"result">>, {[
                     {<<"license_id">>, <<>>},
                     {<<"customer_name">>, <<>>},
-                    {<<"expiration_date">>, {[{<<"seconds">>, ExpirationTime}]}},
+                    {<<"expiration_date">>, {[{<<"seconds">>, ?NEVER_EXPIRES}]}},
                     {<<"license_type">>, <<"commercial">>},
                     {<<"grace_period">>, false}
                    ]}}
@@ -238,11 +146,7 @@ check_license(#state{install_time = InstallTime} = State,  ModeOrPath) ->
   end.
 
 
-% missing license: gets treated as a trial that expires at TRACK_INSTALL_DATE + 90 days (configurable at build)
-% a present license that is not valid gets treated as an expired license.
-% a valid unexpired license gets treated as valid
-% a valid expired license gets treated as expired. license gets treated as valid, and we don not
-%
+% Cinc's default license never expires; the expired branches stay for the reply tuple.
 process_license(<<"">>) ->
     {error, invalid_json};
 process_license(LicJson) ->
