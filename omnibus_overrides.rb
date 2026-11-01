@@ -32,7 +32,7 @@ override "gecode", version: "6.3.0"
 # Cinc-server carries its own branch off stable/cinc-v18.10.17 so it can bump
 # vulnerable transitive gems (rack, json, faraday, addressable, concurrent-ruby)
 # in the lockfile without disturbing the upstream release branch.
-override :chef, version: "stable/cinc-v18.10.17-cinc-server"
+override :chef, version: "security/addressable-rubyntlm-15x"
 
 # FIPS-validated OpenSSL pin (omnibus-software defaults to 3.6.3, no FIPS).
 # fips_version names the FIPS-validated provider: 3.1.2 is the FIPS 140-3
