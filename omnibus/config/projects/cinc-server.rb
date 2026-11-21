@@ -26,7 +26,8 @@ replace         "private-chef"
 conflict        "private-chef"
 install_dir     "/opt/cinc-project"
 build_version   IO.read(File.expand_path("../../../../VERSION", __FILE__)).strip
-build_iteration 1
+# A respin sets BUILD_ITERATION; unset or empty builds iteration 1.
+build_iteration(ENV["BUILD_ITERATION"].to_s.empty? ? 1 : ENV["BUILD_ITERATION"].to_i)
 
 # In order to prevent unecessary cache expiration,
 # package and package version overrides, build_version
